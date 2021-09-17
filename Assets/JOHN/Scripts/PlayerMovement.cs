@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : BasePlayer
 {
     // Start is called before the first frame update
     void Start()
@@ -11,8 +11,13 @@ public class PlayerMovement : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    public override void Update()
     {
-        
+        base.Update();
+    }
+
+    public override void Death()
+    {
+        base.Death();
     }
 }
