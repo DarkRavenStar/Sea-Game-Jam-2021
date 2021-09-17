@@ -35,7 +35,7 @@ public class SceneLoad : BaseUI
 
     public void LoadScene(string sceneName)
     {
-        PlayAnimation(mainCanvas, 1, 0.2f, (() => {
+        PlayAnimation(mainCanvas, 1, 1f, (() => {
             BeginLoadScene(sceneName);
         }));
     }

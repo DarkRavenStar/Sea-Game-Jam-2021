@@ -10,7 +10,7 @@ public class BasePlayer : MonoBehaviour
 {
     public float playerHealth = 1;
 
-    public float playerMovement;
+    public float movementSpeed = 10;
 
     [SerializeField]
     private Transform JailPosition;
