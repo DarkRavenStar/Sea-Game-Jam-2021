@@ -71,12 +71,10 @@ public class TrapSpike : BaseInteractableObject
     {
         if (_isUp)
         {
-            Debug.LogWarning("haha up");
             ownAnim.Play("trap-spike-up");
         }
         else
         {
-            Debug.LogWarning("haha down");
             ownAnim.Play("trap-spike-down");
         }
     }

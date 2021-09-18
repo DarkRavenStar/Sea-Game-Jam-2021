@@ -125,6 +125,7 @@ public class DistractionSpeaker : BaseInteractableObject
         }
         else if (speakerType == SpeakerType.SPEAKER)
         {
+            Debug.LogWarning("[DistractionSpeaker] SpeakerType.SPEAKER");
             //announce to all soldier in list
             foreach (GameObject go in mSoldierList)
             {

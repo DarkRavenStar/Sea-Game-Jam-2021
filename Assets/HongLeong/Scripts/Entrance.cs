@@ -28,7 +28,6 @@ public class Entrance : BaseInteractableObject
                 mPlayerList.Add(player.gameObject);
                 //add player action click callback
                 player.OnInteract += ActionCall;
-                Debug.LogWarning("haha trigger");
             }
         }
     }
@@ -44,7 +43,6 @@ public class Entrance : BaseInteractableObject
                 mPlayerList.Remove(tempPlayer);
                 //add player action click callback
                 player.OnInteract -= ActionCall;
-                Debug.LogWarning("haha remove trigger");
             }
         }
     }
@@ -55,7 +53,6 @@ public class Entrance : BaseInteractableObject
 
         if (mPlayerList.Count == 2)
         {
-                Debug.LogWarning("haha open door");
             //call game manager end game
             if (gameManager.WinScene())
             {
