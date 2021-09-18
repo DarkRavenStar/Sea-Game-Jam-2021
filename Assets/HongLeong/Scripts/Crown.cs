@@ -14,27 +14,21 @@ public class Crown : BaseInteractableObject
 
     protected override void OnTriggerEnter(Collider other)
     {
-        if (other.tag.Equals("Player1"))
+        BasePlayer player = other.GetComponent<BasePlayer>();
+        if (player != null)
         {
             //set player action click callback
-        }
-
-        if (other.tag.Equals("Player2"))
-        {
-            //set player action click callback
+            player.OnInteract += ActionCall;
         }
     }
 
     protected override void OnTriggerExit(Collider other)
     {
-        if (other.tag.Equals("Player1"))
+        BasePlayer player = other.GetComponent<BasePlayer>();
+        if (player != null)
         {
-            //set player action click callback
-        }
-
-        if (other.tag.Equals("Player2"))
-        {
-            //set player action click callback
+            //remove player action click callback
+            player.OnInteract -= ActionCall;
         }
     }
 

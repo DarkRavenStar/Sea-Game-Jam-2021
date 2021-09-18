@@ -32,7 +32,7 @@ public class TrapSpike : BaseInteractableObject
         {
             mSecondOnTrapCount += Time.deltaTime;
 
-            if(mSecondOnTrapCount >= secondOnTrap)
+            if (mSecondOnTrapCount >= secondOnTrap)
             {
                 mIsTrapEnabled = false;
                 mSecondOnTrapCount = 0f;
@@ -43,9 +43,24 @@ public class TrapSpike : BaseInteractableObject
     protected override void OnTriggerEnter(Collider other)
     {
         if (!mIsTrapEnabled) return;
-        if (other.tag.Equals("player1") || other.tag.Equals("player2"))
+
+        BasePlayer player = other.GetComponent<BasePlayer>();
+        if (player != null)
         {
             //hit player
+            player.Damage();
+        }
+    }
+
+    protected override void OnTriggerStay(Collider other)
+    {
+        if (!mIsTrapEnabled) return;
+
+        BasePlayer player = other.GetComponent<BasePlayer>();
+        if (player != null)
+        {
+            //hit player
+            player.Damage();
         }
     }
 }

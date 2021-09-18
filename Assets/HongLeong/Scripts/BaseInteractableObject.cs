@@ -48,4 +48,9 @@ public abstract class BaseInteractableObject : MonoBehaviour
     {
 
     }
+
+    protected virtual void OnTriggerStay(Collider other)
+    {
+        
+    }
 }

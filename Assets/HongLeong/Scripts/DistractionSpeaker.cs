@@ -50,6 +50,7 @@ public class DistractionSpeaker : BaseInteractableObject
                 if (player != null && player.playerAbility == PlayerAbility.INFUSE)
                 {
                     //set player action click callback
+                    player.OnInteract += ActionCall;
                 }
             }
             else if (playerDetect == PlayerAbility.DISPEL)
@@ -58,6 +59,7 @@ public class DistractionSpeaker : BaseInteractableObject
                 if (player != null && player.playerAbility == PlayerAbility.DISPEL)
                 {
                     //set player action click callback
+                    player.OnInteract += ActionCall;
                 }
             }
 
@@ -76,6 +78,7 @@ public class DistractionSpeaker : BaseInteractableObject
                 if (player != null && player.playerAbility == PlayerAbility.INFUSE)
                 {
                     //remove player action click callback
+                    player.OnInteract -= ActionCall;
                 }
             }
             else if (playerDetect == PlayerAbility.DISPEL)
@@ -84,6 +87,7 @@ public class DistractionSpeaker : BaseInteractableObject
                 if (player != null && player.playerAbility == PlayerAbility.DISPEL)
                 {
                     //remove player action click callback
+                    player.OnInteract -= ActionCall;
                 }
             }
         }

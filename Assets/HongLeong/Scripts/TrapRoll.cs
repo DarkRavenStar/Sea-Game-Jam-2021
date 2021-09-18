@@ -55,8 +55,7 @@ public class TrapRoll : BaseInteractableObject
         if (player != null)
         {
             //hit player
-            Debug.LogWarning("haha hit player");
-
+            player.Damage();
         }
     }
 }

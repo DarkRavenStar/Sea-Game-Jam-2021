@@ -22,6 +22,7 @@ public class Door : BaseInteractableObject
             if (player != null && player.playerAbility == PlayerAbility.INFUSE)
             {
                 //set player action click callback
+                player.OnInteract += ActionCall;
             }
         }
         else if (playerDetect == PlayerAbility.DISPEL)
@@ -30,6 +31,7 @@ public class Door : BaseInteractableObject
             if (player != null && player.playerAbility == PlayerAbility.DISPEL)
             {
                 //set player action click callback
+                player.OnInteract += ActionCall;
             }
         }
     }
@@ -39,16 +41,20 @@ public class Door : BaseInteractableObject
         //get player
         if (playerDetect == PlayerAbility.INFUSE)
         {
-            if (other.tag.Equals("Player1"))
+            BasePlayer player = other.GetComponent<BasePlayer>();
+            if (player != null && player.playerAbility == PlayerAbility.INFUSE)
             {
                 //remove player action click callback
+                player.OnInteract -= ActionCall;
             }
         }
         else if (playerDetect == PlayerAbility.DISPEL)
         {
-            if (other.tag.Equals("Player2"))
+            BasePlayer player = other.GetComponent<BasePlayer>();
+            if (player != null && player.playerAbility == PlayerAbility.DISPEL)
             {
                 //remove player action click callback
+                player.OnInteract -= ActionCall;
             }
         }
     }

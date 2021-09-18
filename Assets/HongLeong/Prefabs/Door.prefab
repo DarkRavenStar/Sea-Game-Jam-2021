@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3754156039802857625}
   - component: {fileID: 3754156039802857624}
   m_Layer: 0
-  m_Name: Door Collider
+  m_Name: Door Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -141,7 +141,7 @@ GameObject:
   - component: {fileID: 3754156041235103077}
   - component: {fileID: 3754156041235103076}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: Door Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -218,7 +218,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3754156041235103078}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
@@ -238,5 +238,5 @@ MonoBehaviour:
   colliderType: 0
   squareSize: {x: 0, y: 0, z: 0}
   radiusSize: 0
-  playerDetect: 1
+  playerDetect: 2
   doorCollider: {fileID: 3754156039802857626}
