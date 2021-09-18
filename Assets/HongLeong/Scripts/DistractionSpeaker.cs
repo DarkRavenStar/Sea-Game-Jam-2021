@@ -9,6 +9,13 @@ public enum SpeakerType
     SPEAKER
 }
 
+public enum PlayerType
+{
+    NONE,
+    PLAYER_1,
+    PLAYER_2
+}
+
 /// <summary>
 /// HL - Act either Switch or Speaker behaviour
 /// Switch is for player to trigger
@@ -20,15 +27,16 @@ public class DistractionSpeaker : BaseInteractableObject
 
     [Header("Switch Act Settings")]
     public DistractionSpeaker speaker;
+    public PlayerType playerDetect = PlayerType.NONE;
 
     [Header("Speaker Act Settings")]
     public List<DistractionSpeakerArea> areaList;
-    private List<GameObject> soldierList;
+    private List<GameObject> mSoldierList;
 
     protected override void Start()
     {
         base.Start();
-        soldierList = new List<GameObject>();
+        mSoldierList = new List<GameObject>();
 
         for (int i = 0; i < areaList.Count; i++)
         {
@@ -39,23 +47,47 @@ public class DistractionSpeaker : BaseInteractableObject
 
     protected override void OnTriggerEnter(Collider other)
     {
+        //which player can detect ( WIP )
         if (speakerType == SpeakerType.SWITCH)
         {
             //get player
-            if (other.tag.Equals("player"))
+            if (playerDetect == PlayerType.PLAYER_1)
             {
-                //set player action click callback
+                if (other.tag.Equals("Player1"))
+                {
+                    //set player action click callback
+                }
             }
+            else if (playerDetect == PlayerType.PLAYER_2)
+            {
+                if (other.tag.Equals("Player2"))
+                {
+                    //set player action click callback
+                }
+            }
+
         }
     }
 
     protected override void OnTriggerExit(Collider other)
     {
+        //which player can detect ( WIP )
         if (speakerType == SpeakerType.SWITCH)
         {
-            if (other.tag.Equals("player"))
+            //get player
+            if (playerDetect == PlayerType.PLAYER_1)
             {
-                //remove player action click callback
+                if (other.tag.Equals("Player1"))
+                {
+                    //remove player action click callback
+                }
+            }
+            else if (playerDetect == PlayerType.PLAYER_2)
+            {
+                if (other.tag.Equals("Player2"))
+                {
+                    //remove player action click callback
+                }
             }
         }
     }
@@ -63,20 +95,20 @@ public class DistractionSpeaker : BaseInteractableObject
     private void AddSoldier(GameObject _soldierGo)
     {
         // store soldier when enter the it's collider
-        GameObject soldier = soldierList.Find((x) => x.GetInstanceID() == _soldierGo.GetInstanceID());
+        GameObject soldier = mSoldierList.Find((x) => x.GetInstanceID() == _soldierGo.GetInstanceID());
         if (!soldier)
         {
-            soldierList.Add(_soldierGo);
+            mSoldierList.Add(_soldierGo);
         }
     }
 
     private void RemoveSoldier(GameObject _soldierGo)
     {
         //set player action click callback
-        GameObject soldier = soldierList.Find((x) => x.GetInstanceID() == _soldierGo.GetInstanceID());
+        GameObject soldier = mSoldierList.Find((x) => x.GetInstanceID() == _soldierGo.GetInstanceID());
         if (soldier)
         {
-            soldierList.Remove(soldier);
+            mSoldierList.Remove(soldier);
         }
         else
         {

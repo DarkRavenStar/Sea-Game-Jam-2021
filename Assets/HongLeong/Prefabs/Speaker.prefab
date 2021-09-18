@@ -113,6 +113,7 @@ MonoBehaviour:
   radiusSize: 0
   speakerType: 1
   speaker: {fileID: 5683474633897707960}
+  playerDetect: 0
   areaList: []
 --- !u!1 &5683474633897707911
 GameObject:
@@ -229,6 +230,7 @@ MonoBehaviour:
   radiusSize: 0
   speakerType: 2
   speaker: {fileID: 0}
+  playerDetect: 0
   areaList:
   - {fileID: 5683474634153099074}
   - {fileID: 5683474634518641809}
@@ -478,7 +480,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5683474634690229887}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.0610037, y: -2.244864, z: 9.06}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5683474633467470043}

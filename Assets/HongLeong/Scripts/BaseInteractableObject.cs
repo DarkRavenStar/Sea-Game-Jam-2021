@@ -10,27 +10,30 @@ public enum ColliderType
     CIRCLE,
 }
 
+/// <summary>
+/// HL - Base class for interactable / non-interactable object
+/// </summary>
 public abstract class BaseInteractableObject : MonoBehaviour
 {
     public ColliderType colliderType = ColliderType.NONE;
     public Vector3 squareSize;
     public float radiusSize;
     protected Action mActionCallback;
-    protected BoxCollider boxCollider;
-    protected SphereCollider SphereCollider;
+    protected BoxCollider mBoxCollider;
+    protected SphereCollider mSphereCollider;
 
     protected virtual void Start()
     {
 
         if (colliderType == ColliderType.BOX)
         {
-            boxCollider = GetComponent<BoxCollider>();
-            boxCollider.size = squareSize;
+            mBoxCollider = GetComponent<BoxCollider>();
+            mBoxCollider.size = squareSize;
         }
         else if (colliderType == ColliderType.CIRCLE)
         {
-            SphereCollider = GetComponent<SphereCollider>();
-            SphereCollider.radius = radiusSize;
+            mSphereCollider = GetComponent<SphereCollider>();
+            mSphereCollider.radius = radiusSize;
         }
     }
 
