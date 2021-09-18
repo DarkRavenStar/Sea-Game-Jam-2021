@@ -126,6 +126,15 @@ public class DistractionSpeaker : BaseInteractableObject
         else if (speakerType == SpeakerType.SPEAKER)
         {
             //announce to all soldier in list
+            foreach (GameObject go in mSoldierList)
+            {
+                GuardAI gai = go.GetComponent<GuardAI>();
+                
+                if(gai != null)
+                {
+                    gai.SetCurrentTarget(this.transform);
+                }
+            }
         }
     }
 }

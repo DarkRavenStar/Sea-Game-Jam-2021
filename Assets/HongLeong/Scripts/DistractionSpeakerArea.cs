@@ -14,7 +14,7 @@ public class DistractionSpeakerArea : BaseInteractableObject
 
     protected override void OnTriggerEnter(Collider other)
     {
-        if (other.tag.Equals("soldier"))
+        if(other.gameObject.GetComponent<GuardAI>())
         {
             addSoldierCallback?.Invoke(other.gameObject);
         }
@@ -22,7 +22,7 @@ public class DistractionSpeakerArea : BaseInteractableObject
 
     protected override void OnTriggerExit(Collider other)
     {
-        if (other.tag.Equals("soldier"))
+        if (other.gameObject.GetComponent<GuardAI>())
         {
             removeSoldierCallback?.Invoke(other.gameObject);
         }

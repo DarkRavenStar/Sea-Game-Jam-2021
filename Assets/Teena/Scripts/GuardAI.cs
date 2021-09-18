@@ -68,13 +68,11 @@ public class GuardAI : MonoBehaviour
     {
         if(doHeadTurn)
         {
-            navAgent.updateRotation = false;
             HeadTurnAnimation();
         }
         else
         {
             isRotatingHead = false;
-            navAgent.updateRotation = true;
         }
     }
 
@@ -276,6 +274,7 @@ public class GuardAI : MonoBehaviour
                 DoHeadTurn(true);
                 break;
             case AIState.Chase:
+                DoHeadTurn(false);
                 LookAtTarget();
                 break;
             case AIState.Suspicous:
