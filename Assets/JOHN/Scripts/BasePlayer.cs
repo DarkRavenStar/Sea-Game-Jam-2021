@@ -65,13 +65,18 @@ public class BasePlayer : MonoBehaviour
             }
         }
 
-        if(Input.GetKeyDown(KeyCode.G))
+        if (Input.GetKeyDown(KeyCode.G))
         {
-            if(Player == player.player2)
+            if (Player == player.player2)
+                Damage();
+        }
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            if (Player == player.player1)
                 Damage();
         }
 
-        if(Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E))
         {
             if (Player == player.player1)
             {

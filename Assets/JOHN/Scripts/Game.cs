@@ -48,7 +48,11 @@ public class Game : MonoBehaviour
         if (!deadPlayers.Contains(ply))
             deadPlayers.Add(ply);
 
-        if(deadPlayers.Count == Players.Length)
+        Debug.Log("ADS");
+
+        Debug.Log(deadPlayers.Count + "Deadplayers " + Players.Length + "players");
+
+        if (deadPlayers.Count == Players.Length)
         {
             GameOver();
         }
@@ -62,8 +66,7 @@ public class Game : MonoBehaviour
 
     private void GameOver()
     {
-        Debug.Log("Game Over");
-        //Gavin: Run UI Stuff here
+        frontEndUI._PlayAnimation(frontEndUI.GetComponent<CanvasGroup>(), 1, 0.4f, null, true);
     }
 
 }
