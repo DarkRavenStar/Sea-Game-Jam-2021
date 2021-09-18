@@ -11,11 +11,14 @@ public class PlayerMovement : BasePlayer
 
     [SerializeField]
     private GameObject mesh;
+
+    private CameraMovement camMovement;
     protected override void OnEnable()
     {
         base.OnEnable();
         rb = this.GetComponent<Rigidbody>();
         anim = mesh.GetComponent<Animator>();
+        camMovement = Camera.main.GetComponent<CameraMovement>();
     }
     protected override void OnDisable()
     {
@@ -34,7 +37,24 @@ public class PlayerMovement : BasePlayer
         {
             if (Player == player.player1)
             {
-                rb.velocity = new Vector3(Input.GetAxis("HorizontalWASD") * movementSpeed * Time.fixedDeltaTime, 0, Input.GetAxis("VerticalWASD") * movementSpeed * Time.fixedDeltaTime);
+                float tempP1 = 0;
+                if (camMovement.CanMove(camMovement.midPoint, rb.gameObject, out tempP1))
+                {
+                    rb.velocity = new Vector3(Input.GetAxis("HorizontalWASD") * movementSpeed * Time.fixedDeltaTime, 0, Input.GetAxis("VerticalWASD") * movementSpeed * Time.fixedDeltaTime);
+                }
+                else
+                {
+                    if(tempP1 < 100)//at the bottom of the screen
+                    {
+                        var tempVertAxis = Mathf.Abs(Input.GetAxis("VerticalWASD"));
+                        rb.velocity = new Vector3(Input.GetAxis("HorizontalWASD") * movementSpeed * Time.fixedDeltaTime, 0, tempVertAxis * movementSpeed * Time.fixedDeltaTime);
+                    }
+                    else//at the top of the screen
+                    {
+                        var tempVertAxis = -(Mathf.Abs(Input.GetAxis("VerticalWASD")));
+                        rb.velocity = new Vector3(Input.GetAxis("HorizontalWASD") * movementSpeed * Time.fixedDeltaTime, 0, tempVertAxis * movementSpeed * Time.fixedDeltaTime);
+                    }
+                }
                 if (rb.velocity != Vector3.zero)
                 {
                     anim.SetBool("isWalk", true);
@@ -68,10 +88,31 @@ public class PlayerMovement : BasePlayer
             }
             if (Player == player.player2)
             {
-                rb.velocity = new Vector3(Input.GetAxis("HorizontalArrow") * movementSpeed * Time.fixedDeltaTime, 0, Input.GetAxis("VerticalArrow") * movementSpeed * Time.fixedDeltaTime);
+                float tempP2 = 0;
+                if (camMovement.CanMove(camMovement.midPoint, rb.gameObject, out tempP2))
+                {
+                    rb.velocity = new Vector3(Input.GetAxis("HorizontalArrow") * movementSpeed * Time.fixedDeltaTime, 0, Input.GetAxis("VerticalArrow") * movementSpeed * Time.fixedDeltaTime);
+                }
+                else
+                {
+                    if (tempP2 < 80)//at the bottom of the screen
+                    {
+                        var tempVertAxis = Mathf.Abs(Input.GetAxis("VerticalArrow"));
+                        rb.velocity = new Vector3(Input.GetAxis("HorizontalArrow") * movementSpeed * Time.fixedDeltaTime, 0, tempVertAxis * movementSpeed * Time.fixedDeltaTime);
+                    }
+                    else//at the top of the screen
+                    {
+                        var tempVertAxis = -(Mathf.Abs(Input.GetAxis("VerticalArrow")));
+                        rb.velocity = new Vector3(Input.GetAxis("HorizontalArrow") * movementSpeed * Time.fixedDeltaTime, 0, tempVertAxis * movementSpeed * Time.fixedDeltaTime);
+                    }
+                }
                 if (rb.velocity != Vector3.zero)
                 {
                     anim.SetBool("isWalk", true);
+                }
+                else
+                {
+                    anim.SetBool("isWalk", false);
                 }
                 if (Input.GetKey(KeyCode.UpArrow))//front
                 {
