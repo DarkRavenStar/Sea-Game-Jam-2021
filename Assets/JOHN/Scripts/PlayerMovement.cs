@@ -6,10 +6,20 @@ using UnityEngine;
 public class PlayerMovement : BasePlayer
 {
     Rigidbody rb;
+
+    Animator anim;
+
+    [SerializeField]
+    private GameObject mesh;
     protected override void OnEnable()
     {
         base.OnEnable();
         rb = this.GetComponent<Rigidbody>();
+        anim = mesh.GetComponent<Animator>();
+    }
+    protected override void OnDisable()
+    {
+        base.OnDisable();
     }
 
     // Update is called once per frame
@@ -20,57 +30,71 @@ public class PlayerMovement : BasePlayer
 
     private void FixedUpdate()
     {
-        if (Player == player.player1)
+        if (!isDead)
         {
-            rb.velocity = new Vector3(Input.GetAxis("HorizontalWASD") * movementSpeed * Time.fixedDeltaTime, 0, Input.GetAxis("VerticalWASD") * movementSpeed * Time.fixedDeltaTime);
-            //PlayerAnimation();
-            if (Input.GetKey(KeyCode.W))//front
+            if (Player == player.player1)
             {
-                RotateTowards(new Vector3(0, 0, 0), Player, Time.fixedDeltaTime);
+                rb.velocity = new Vector3(Input.GetAxis("HorizontalWASD") * movementSpeed * Time.fixedDeltaTime, 0, Input.GetAxis("VerticalWASD") * movementSpeed * Time.fixedDeltaTime);
+                if (rb.velocity != Vector3.zero)
+                {
+                    anim.SetBool("isWalk", true);
+                }
+                else
+                {
+                    anim.SetBool("isWalk", false);
+                }
+                if (Input.GetKey(KeyCode.W))//front
+                {
+                    RotateTowards(new Vector3(0, 0, 0), Player, Time.fixedDeltaTime);
+                }
+                else if (Input.GetKey(KeyCode.A))//Left
+                {
+                    RotateTowards(new Vector3(0, 270, 0), Player, Time.fixedDeltaTime);
+                }
+                else if (Input.GetKey(KeyCode.S))//Down
+                {
+                    RotateTowards(new Vector3(0, 180, 0), Player, Time.fixedDeltaTime);
+                }
+                else if (Input.GetKey(KeyCode.D))//Right
+                {
+                    RotateTowards(new Vector3(0, 0, 0), Player, Time.fixedDeltaTime);
+                }
+                else
+                {
+                    rb.velocity = Vector3.zero;
+                    rb.angularVelocity = Vector3.zero;
+                    rb.rotation = transform.rotation;
+                }
             }
-            else if (Input.GetKey(KeyCode.A))//Left
+            if (Player == player.player2)
             {
-                RotateTowards(new Vector3(0, 270, 0), Player, Time.fixedDeltaTime);
-            }
-            else if (Input.GetKey(KeyCode.S))//Down
-            {
-                RotateTowards(new Vector3(0, 180, 0), Player, Time.fixedDeltaTime);
-            }
-            else if (Input.GetKey(KeyCode.D))//Right
-            {
-                RotateTowards(new Vector3(0, 0, 0), Player, Time.fixedDeltaTime);
-            }
-            else
-            {
-                rb.velocity = Vector3.zero;
-                rb.angularVelocity = Vector3.zero;
-                rb.rotation = transform.rotation;
-            }
-        }
-        if (Player == player.player2)
-        {
-            rb.velocity = new Vector3(Input.GetAxis("HorizontalArrow") * movementSpeed * Time.fixedDeltaTime, 0, Input.GetAxis("VerticalArrow") * movementSpeed * Time.fixedDeltaTime);
-            if (Input.GetKey(KeyCode.UpArrow))//front
-            {
-                RotateTowards(new Vector3(0, 0, 0), Player, Time.fixedDeltaTime);
-            }
-            else if (Input.GetKey(KeyCode.LeftArrow))//Left
-            {
-                RotateTowards(new Vector3(0, 270, 0), Player, Time.fixedDeltaTime);
-            }
-            else if (Input.GetKey(KeyCode.DownArrow))//Down
-            {
-                RotateTowards(new Vector3(0, 180, 0), Player, Time.fixedDeltaTime);
-            }
-            else if (Input.GetKey(KeyCode.RightArrow))//Right
-            {
-                RotateTowards(new Vector3(0, 0, 0), Player, Time.fixedDeltaTime);
-            }
-            else
-            {
-                rb.velocity = Vector3.zero;
-                rb.angularVelocity = Vector3.zero;
-                rb.rotation = transform.rotation;
+                rb.velocity = new Vector3(Input.GetAxis("HorizontalArrow") * movementSpeed * Time.fixedDeltaTime, 0, Input.GetAxis("VerticalArrow") * movementSpeed * Time.fixedDeltaTime);
+                if (rb.velocity != Vector3.zero)
+                {
+                    anim.SetBool("isWalk", true);
+                }
+                if (Input.GetKey(KeyCode.UpArrow))//front
+                {
+                    RotateTowards(new Vector3(0, 0, 0), Player, Time.fixedDeltaTime);
+                }
+                else if (Input.GetKey(KeyCode.LeftArrow))//Left
+                {
+                    RotateTowards(new Vector3(0, 270, 0), Player, Time.fixedDeltaTime);
+                }
+                else if (Input.GetKey(KeyCode.DownArrow))//Down
+                {
+                    RotateTowards(new Vector3(0, 180, 0), Player, Time.fixedDeltaTime);
+                }
+                else if (Input.GetKey(KeyCode.RightArrow))//Right
+                {
+                    RotateTowards(new Vector3(0, 0, 0), Player, Time.fixedDeltaTime);
+                }
+                else
+                {
+                    rb.velocity = Vector3.zero;
+                    rb.angularVelocity = Vector3.zero;
+                    rb.rotation = transform.rotation;
+                }
             }
         }
     }
@@ -95,22 +119,6 @@ public class PlayerMovement : BasePlayer
 
     private void PlayerAnimation()
     {
-        bool isRight = false;
-        float currentRot = isRight?-20: 20;
-        float currentLerp;
-        currentLerp = Mathf.Lerp(transform.eulerAngles.z, currentRot, 0.01f);
-        //transform.eulerAngles = transform.rotation,Mathf.Lerp(transform.eulerAngles, Quaternion.Euler(0, 20, 0), 0.2f);
-        transform.localRotation = Quaternion.Euler(new Vector3(0, 0, currentLerp));
-        if(!isRight)
-        {
-            if(transform.eulerAngles.z == 20)
-            {
-                isRight = true;
-            }
-        }
-        else
-        {
-            isRight = false;
-        }
+
     }
 }

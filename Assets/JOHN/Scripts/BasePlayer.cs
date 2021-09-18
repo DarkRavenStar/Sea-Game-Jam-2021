@@ -15,7 +15,7 @@ public class BasePlayer : MonoBehaviour
     [SerializeField]
     private Transform JailPosition;
 
-    private bool isDead = false;
+    protected bool isDead = false;
 
     [SerializeField]
     protected player Player;
@@ -25,11 +25,20 @@ public class BasePlayer : MonoBehaviour
         player2
     }
 
-    private System.Action<GameObject> OnDeath = delegate { };
+    public System.Action<GameObject> OnDeath = delegate { };
+
+    public System.Action<GameObject> OnRevive = delegate { };
+
+    public System.Action OnInteract = delegate { };
 
     protected virtual void OnEnable()
     {
         OnDeath += OnDeathPlayer;
+    }
+
+    protected virtual void OnDisable()
+    {
+        OnDeath -= OnDeathPlayer;
     }
     public virtual void Update()
     {
@@ -46,21 +55,35 @@ public class BasePlayer : MonoBehaviour
         {
             if(Player == player.player2)
                 Damage();
+            if (Player == player.player1)
+                Damage();
+        }
+
+        if(Input.GetKeyDown(KeyCode.E))
+        {
+            if (Player == player.player1)
+                this.OnInteract?.Invoke();
+        }
+        if(Input.GetKeyDown(KeyCode.F))
+        {
+            if(Player == player.player2)
+                this.OnInteract?.Invoke();
         }
     }
     public virtual void Revive()
     {
         playerHealth = 1;
         isDead = false;
+        OnRevive(this.gameObject);
     }
 
     private void teleport(Transform pos)
     {
         transform.position = pos.position;
     }
-
-    private void Damage()
+    public void Damage()
     {
+        if(this.playerHealth > 0)
         this.playerHealth -= 1;
     }
 
@@ -71,21 +94,21 @@ public class BasePlayer : MonoBehaviour
 
         for (int i = 0; i < temp.Length; i++)
         {
+            temp[i].OnDeath(this.gameObject);
+            //if (temp[i].isDead == false)
+            //{
+            //    undeads.Add(temp[i]);
 
-            if (temp[i].isDead == false)
-            {
-                undeads.Add(temp[i]);
-
-            }
-            else
-            {
-                continue;
-            }
+            //}
+            //else
+            //{
+            //    continue;
+            //}
         }
-        foreach (var undead in undeads)
-        {
-            undead.OnDeath(this.gameObject);
-        }
+        //foreach (var undead in undeads)
+        //{
+        //    undead.OnDeath(this.gameObject);
+        //}
     }
 
     private IEnumerator DeathRoutine()
@@ -101,7 +124,5 @@ public class BasePlayer : MonoBehaviour
     {
         //Listener for deadplayer
         Debug.Log(deadPlayer.name + "is dead");
-
-
     }
 }
