@@ -216,7 +216,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 100
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -305,6 +305,7 @@ GameObject:
   - component: {fileID: 267330545}
   - component: {fileID: 267330544}
   - component: {fileID: 267330543}
+  - component: {fileID: 267330547}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -371,7 +372,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!224 &267330546
 RectTransform:
@@ -395,6 +396,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &267330547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 267330542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac104c37e5d75e843a36f2ed7921974b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &316125026
 GameObject:
   m_ObjectHideFlags: 0
@@ -1027,8 +1040,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 316125027}
-        m_TargetAssemblyTypeName: SceneLoad, Assembly-CSharp
+      - m_Target: {fileID: 267330547}
+        m_TargetAssemblyTypeName: StartScene, Assembly-CSharp
         m_MethodName: LoadScene
         m_Mode: 5
         m_Arguments:
@@ -1169,7 +1182,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 21
   m_TargetDisplay: 0
 --- !u!224 &1105977215
 RectTransform:

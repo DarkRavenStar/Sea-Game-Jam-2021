@@ -8,6 +8,7 @@ using DG.Tweening;
 
 public class SceneLoad : BaseUI
 {
+    public static SceneLoad instance = null;
     [SerializeField]
     private LoadingScreen loadingScreen;
     [SerializeField]
@@ -18,10 +19,17 @@ public class SceneLoad : BaseUI
 
     private void Awake()
     {
+        if (!instance)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
         Application.targetFrameRate = 60;
-        
         DOTween.Init();
-        DontDestroyOnLoad(gameObject);
         loadSceneMode = LoadSceneMode.Single;
     }
     void Start()

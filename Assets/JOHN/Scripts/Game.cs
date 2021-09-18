@@ -48,13 +48,10 @@ public class Game : MonoBehaviour
         if (!deadPlayers.Contains(ply))
             deadPlayers.Add(ply);
 
-        Debug.Log("ADS");
-
-        Debug.Log(deadPlayers.Count + "Deadplayers " + Players.Length + "players");
-
         if (deadPlayers.Count == Players.Length)
         {
-            GameOver();
+            StartCoroutine(Co_GameOver());
+
         }
     }
 
@@ -64,9 +61,21 @@ public class Game : MonoBehaviour
             deadPlayers.Remove(ply);
     }
 
+    IEnumerator Co_GameOver()
+    {
+        yield return new WaitForSeconds(1.0f);//Delay
+        GameOver();
+
+    }
     private void GameOver()
     {
         frontEndUI._PlayAnimation(frontEndUI.GetComponent<CanvasGroup>(), 1, 0.4f, null, true);
+    }
+
+
+    public void LoadScene()
+    {
+        SceneLoad.instance.LoadScene("Start");
     }
 
 }
