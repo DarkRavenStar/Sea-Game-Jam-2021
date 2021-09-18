@@ -9,13 +9,6 @@ public enum SpeakerType
     SPEAKER
 }
 
-public enum PlayerType
-{
-    NONE,
-    PLAYER_1,
-    PLAYER_2
-}
-
 /// <summary>
 /// HL - Act either Switch or Speaker behaviour
 /// Switch is for player to trigger
@@ -27,7 +20,7 @@ public class DistractionSpeaker : BaseInteractableObject
 
     [Header("Switch Act Settings")]
     public DistractionSpeaker speaker;
-    public PlayerType playerDetect = PlayerType.NONE;
+    public PlayerAbility playerDetect = PlayerAbility.NONE;
 
     [Header("Speaker Act Settings")]
     public List<DistractionSpeakerArea> areaList;
@@ -51,16 +44,18 @@ public class DistractionSpeaker : BaseInteractableObject
         if (speakerType == SpeakerType.SWITCH)
         {
             //get player
-            if (playerDetect == PlayerType.PLAYER_1)
+            if (playerDetect == PlayerAbility.INFUSE)
             {
-                if (other.tag.Equals("Player1"))
+                BasePlayer player = other.GetComponent<BasePlayer>();
+                if (player != null && player.playerAbility == PlayerAbility.INFUSE)
                 {
                     //set player action click callback
                 }
             }
-            else if (playerDetect == PlayerType.PLAYER_2)
+            else if (playerDetect == PlayerAbility.DISPEL)
             {
-                if (other.tag.Equals("Player2"))
+                BasePlayer player = other.GetComponent<BasePlayer>();
+                if (player != null && player.playerAbility == PlayerAbility.DISPEL)
                 {
                     //set player action click callback
                 }
@@ -75,16 +70,18 @@ public class DistractionSpeaker : BaseInteractableObject
         if (speakerType == SpeakerType.SWITCH)
         {
             //get player
-            if (playerDetect == PlayerType.PLAYER_1)
+            if (playerDetect == PlayerAbility.INFUSE)
             {
-                if (other.tag.Equals("Player1"))
+                BasePlayer player = other.GetComponent<BasePlayer>();
+                if (player != null && player.playerAbility == PlayerAbility.INFUSE)
                 {
                     //remove player action click callback
                 }
             }
-            else if (playerDetect == PlayerType.PLAYER_2)
+            else if (playerDetect == PlayerAbility.DISPEL)
             {
-                if (other.tag.Equals("Player2"))
+                BasePlayer player = other.GetComponent<BasePlayer>();
+                if (player != null && player.playerAbility == PlayerAbility.DISPEL)
                 {
                     //remove player action click callback
                 }
