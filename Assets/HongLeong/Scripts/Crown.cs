@@ -9,6 +9,7 @@ public class Crown : BaseInteractableObject
 {
     [Header("Crown Settings")]
     public GameObject crownHat;
+    public Game gameManager;
 
     private bool mIsSteal = false;
 
@@ -38,5 +39,6 @@ public class Crown : BaseInteractableObject
 
         mIsSteal = true;
         crownHat.SetActive(false);
+        gameManager.TakeCrown();
     }
 }

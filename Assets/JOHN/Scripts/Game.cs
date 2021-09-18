@@ -11,12 +11,13 @@ public class Game : MonoBehaviour
     private BaseUI frontEndUI;
 
     private List<GameObject> deadPlayers = new List<GameObject>();
+    private bool mHasCrown = false;
     // Start is called before the first frame update
     void OnEnable()
     {
-        foreach(var player in Players)
+        foreach (var player in Players)
         {
-            if(player)
+            if (player)
             {
                 player.OnDeath += AddDeath;
                 player.OnRevive += RemoveDeath;
@@ -57,7 +58,7 @@ public class Game : MonoBehaviour
 
     private void RemoveDeath(GameObject ply)
     {
-        if(deadPlayers.Contains(ply))
+        if (deadPlayers.Contains(ply))
             deadPlayers.Remove(ply);
     }
 
@@ -76,6 +77,23 @@ public class Game : MonoBehaviour
     public void LoadScene()
     {
         SceneLoad.instance.LoadScene("Start");
+    }
+
+    public bool WinScene()
+    {
+        if (mHasCrown)
+        {
+            //go to win UI
+            SceneLoad.instance?.LoadScene("End");
+            return true;
+        }
+
+        return false;
+    }
+
+    public void TakeCrown()
+    {
+        mHasCrown = true;
     }
 
 }
