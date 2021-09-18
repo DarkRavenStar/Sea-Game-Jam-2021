@@ -94,21 +94,9 @@ public class BasePlayer : MonoBehaviour
 
         for (int i = 0; i < temp.Length; i++)
         {
-            temp[i].OnDeath(this.gameObject);
-            //if (temp[i].isDead == false)
-            //{
-            //    undeads.Add(temp[i]);
-
-            //}
-            //else
-            //{
-            //    continue;
-            //}
+            if(this.gameObject != temp[i].gameObject)
+                temp[i].OnDeath(this.gameObject);
         }
-        //foreach (var undead in undeads)
-        //{
-        //    undead.OnDeath(this.gameObject);
-        //}
     }
 
     private IEnumerator DeathRoutine()
@@ -120,7 +108,7 @@ public class BasePlayer : MonoBehaviour
         teleport(JailPosition.transform);
     }
 
-    public void OnDeathPlayer(GameObject deadPlayer)
+    protected void OnDeathPlayer(GameObject deadPlayer)
     {
         //Listener for deadplayer
         Debug.Log(deadPlayer.name + "is dead");

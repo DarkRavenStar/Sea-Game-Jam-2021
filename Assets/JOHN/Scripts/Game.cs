@@ -16,7 +16,7 @@ public class Game : MonoBehaviour
     {
         foreach(var player in Players)
         {
-            if(!player)
+            if(player)
             {
                 player.OnDeath += AddDeath;
                 player.OnRevive += RemoveDeath;
@@ -28,7 +28,7 @@ public class Game : MonoBehaviour
     {
         foreach (var player in Players)
         {
-            if (!player)
+            if (player)
             {
                 player.OnDeath -= AddDeath;
                 player.OnRevive -= RemoveDeath;
@@ -45,8 +45,6 @@ public class Game : MonoBehaviour
 
     private void AddDeath(GameObject ply)
     {
-        Debug.Log("Adding");
-
         if (!deadPlayers.Contains(ply))
             deadPlayers.Add(ply);
 
@@ -65,30 +63,7 @@ public class Game : MonoBehaviour
     private void GameOver()
     {
         Debug.Log("Game Over");
-
+        //Gavin: Run UI Stuff here
     }
 
-    public virtual void DeathEvent(GameObject player)
-    {
-        List<BasePlayer> undeads = new List<BasePlayer>();
-        BasePlayer[] temp = FindObjectsOfType<BasePlayer>();
-
-        for (int i = 0; i < temp.Length; i++)
-        {
-            temp[i].OnDeath(this.gameObject);
-            //if (temp[i].isDead == false)
-            //{
-            //    undeads.Add(temp[i]);
-
-            //}
-            //else
-            //{
-            //    continue;
-            //}
-        }
-        //foreach (var undead in undeads)
-        //{
-        //    undead.OnDeath(this.gameObject);
-        //}
-    }
 }

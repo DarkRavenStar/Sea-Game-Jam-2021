@@ -112,10 +112,6 @@ public class PlayerMovement : BasePlayer
             transform.rotation = Quaternion.RotateTowards(transform.rotation, toRot, 1000f * delta);
         }
     }
-    public override void DeathEvent(GameObject player)
-    {
-        base.DeathEvent(player);
-    }
 
     private void PlayerAnimation()
     {
