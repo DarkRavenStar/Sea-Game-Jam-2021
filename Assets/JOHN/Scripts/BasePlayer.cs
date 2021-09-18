@@ -107,9 +107,9 @@ public class BasePlayer : MonoBehaviour
         OnRevive(ply.gameObject);
     }
 
-    private void teleport(Transform pos)
+    private void teleport(Transform pos, GameObject ply)
     {
-        transform.position = pos.position;
+        ply.transform.position = pos.position;
     }
     public void Damage()
     {
@@ -129,17 +129,23 @@ public class BasePlayer : MonoBehaviour
         }
     }
 
-    private IEnumerator DeathRoutine()
+    private IEnumerator DeathRoutine(GameObject ply)
     {
-        ///DO death routine here, vulnerable? invulnerable? fall down animation?
-        ///
-        yield return new WaitForSeconds(5.0f);
-        teleport(JailPosition.transform);
+        ply.GetComponent<CapsuleCollider>().enabled = false;
+        ply.GetComponent<Rigidbody>().isKinematic = true;
+        yield return new WaitForSeconds(2.5f);
+        ply.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
+        yield return new WaitForSeconds(0.5f);
+        teleport(JailPosition.transform, ply);
+        ply.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = true;
+        ply.GetComponent<CapsuleCollider>().enabled = true;
+        ply.GetComponent<Rigidbody>().isKinematic = false;
     }
 
     protected virtual void OnDeathPlayer(GameObject deadPlayer)
     {
         //Listener for deadplayer
+        StartCoroutine(DeathRoutine(deadPlayer));
         Debug.Log(deadPlayer.name + "is dead");
     }
     protected virtual void OnRevivedPlayer(GameObject ply)
@@ -154,11 +160,13 @@ public class BasePlayer : MonoBehaviour
         {
             if (other.transform.parent.GetComponent<BasePlayer>())
             {
-                if (other.transform.parent.GetComponent<BasePlayer>().isDead == false)
+                if (other.transform.parent.GetComponent<BasePlayer>().isDead == true)
                 {
                     canRevive = true;
                     if (playerInTrigger == null)
+                    {
                         playerInTrigger = other.transform.parent.GetComponent<PlayerMovement>() as BasePlayer;
+                    }
                 }
             }
         }
@@ -171,8 +179,7 @@ public class BasePlayer : MonoBehaviour
             if (other.transform.parent.GetComponent<BasePlayer>())
             {
                 canRevive = false;
-                if (playerInTrigger)
-                    playerInTrigger = other.transform.parent.GetComponent<PlayerMovement>() as BasePlayer;
+                playerInTrigger = null;
             }
         }
     }
