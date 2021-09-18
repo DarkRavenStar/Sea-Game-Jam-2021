@@ -10,6 +10,7 @@ public class TrapSpike : BaseInteractableObject
     [Header("Trap Settings")]
     public float secondTriggerTrap = 3f;
     public float secondOnTrap = 3f;
+    public Animation ownAnim;
 
     private float mSecondCount = 0f;
     private float mSecondOnTrapCount = 0f;
@@ -26,6 +27,7 @@ public class TrapSpike : BaseInteractableObject
             {
                 mIsTrapEnabled = true;
                 mSecondCount = 0f;
+                PlayAnimation(true);
             }
         }
         else
@@ -36,6 +38,7 @@ public class TrapSpike : BaseInteractableObject
             {
                 mIsTrapEnabled = false;
                 mSecondOnTrapCount = 0f;
+                PlayAnimation(false);
             }
         }
     }
@@ -61,6 +64,20 @@ public class TrapSpike : BaseInteractableObject
         {
             //hit player
             player.Damage();
+        }
+    }
+
+    private void PlayAnimation(bool _isUp)
+    {
+        if (_isUp)
+        {
+            Debug.LogWarning("haha up");
+            ownAnim.Play("trap-spike-up");
+        }
+        else
+        {
+            Debug.LogWarning("haha down");
+            ownAnim.Play("trap-spike-down");
         }
     }
 }

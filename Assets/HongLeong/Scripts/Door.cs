@@ -10,6 +10,7 @@ public class Door : BaseInteractableObject
     [Header("Door Settings")]
     public PlayerAbility playerDetect = PlayerAbility.NONE;
     public GameObject doorCollider;
+    public Animation ownAnim;
 
     private bool mIsDoorOpened = false;
 
@@ -68,5 +69,7 @@ public class Door : BaseInteractableObject
         //disable collider
         doorCollider.GetComponent<Collider>().enabled = false;
         doorCollider.SetActive(false);
+
+        ownAnim.Play("door-break");
     }
 }
