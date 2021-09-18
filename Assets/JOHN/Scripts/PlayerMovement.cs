@@ -117,4 +117,16 @@ public class PlayerMovement : BasePlayer
     {
 
     }
+
+    protected override void OnDeathPlayer(GameObject deadPlayer)
+    {
+        base.OnDeathPlayer(deadPlayer);
+        deadPlayer.GetComponent<PlayerMovement>().anim.SetBool("isDead", true);
+    }
+
+    protected override void OnRevivedPlayer(GameObject ply)
+    {
+        base.OnRevivedPlayer(ply);
+        ply.GetComponent<PlayerMovement>().anim.SetBool("isDead", false);
+    }
 }

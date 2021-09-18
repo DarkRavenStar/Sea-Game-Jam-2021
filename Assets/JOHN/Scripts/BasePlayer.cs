@@ -25,6 +25,10 @@ public class BasePlayer : MonoBehaviour
 
     protected bool isDead = false;
 
+    private bool canRevive = false;
+
+    private BasePlayer playerInTrigger;
+
     [SerializeField]
     protected player Player;
     protected enum player
@@ -42,11 +46,13 @@ public class BasePlayer : MonoBehaviour
     protected virtual void OnEnable()
     {
         OnDeath += OnDeathPlayer;
+        OnRevive += OnRevivedPlayer;
     }
 
     protected virtual void OnDisable()
     {
         OnDeath -= OnDeathPlayer;
+        OnRevive -= OnRevivedPlayer;
     }
     public virtual void Update()
     {
@@ -63,26 +69,42 @@ public class BasePlayer : MonoBehaviour
         {
             if(Player == player.player2)
                 Damage();
-            if (Player == player.player1)
-                Damage();
         }
 
         if(Input.GetKeyDown(KeyCode.E))
         {
             if (Player == player.player1)
+            {
                 this.OnInteract?.Invoke();
+            }
+            if(canRevive)
+            {
+                if(playerInTrigger)
+                    Revive(playerInTrigger);
+            }
         }
         if(Input.GetKeyDown(KeyCode.F))
         {
-            if(Player == player.player2)
+            if (Player == player.player2)
+            {
                 this.OnInteract?.Invoke();
+            }
+            if(canRevive)
+            {
+                if(playerInTrigger)
+                    Revive(playerInTrigger);
+            }
         }
     }
-    public virtual void Revive()
+
+    /// <summary>
+    /// Call revive
+    /// </summary>
+    public virtual void Revive(BasePlayer ply)
     {
-        playerHealth = 1;
-        isDead = false;
-        OnRevive(this.gameObject);
+        ply.playerHealth = 1;
+        ply.isDead = false;
+        OnRevive(ply.gameObject);
     }
 
     private void teleport(Transform pos)
@@ -92,7 +114,7 @@ public class BasePlayer : MonoBehaviour
     public void Damage()
     {
         if(this.playerHealth > 0)
-        this.playerHealth -= 1;
+            this.playerHealth -= 1;
     }
 
     public virtual void DeathEvent(GameObject player)
@@ -111,14 +133,47 @@ public class BasePlayer : MonoBehaviour
     {
         ///DO death routine here, vulnerable? invulnerable? fall down animation?
         ///
-
         yield return new WaitForSeconds(5.0f);
         teleport(JailPosition.transform);
     }
 
-    protected void OnDeathPlayer(GameObject deadPlayer)
+    protected virtual void OnDeathPlayer(GameObject deadPlayer)
     {
         //Listener for deadplayer
         Debug.Log(deadPlayer.name + "is dead");
+    }
+    protected virtual void OnRevivedPlayer(GameObject ply)
+    {
+        //Listener for revived ply
+        Debug.Log(ply.name + "is revived");
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.transform.parent)
+        {
+            if (other.transform.parent.GetComponent<BasePlayer>())
+            {
+                if (other.transform.parent.GetComponent<BasePlayer>().isDead == false)
+                {
+                    canRevive = true;
+                    if (playerInTrigger == null)
+                        playerInTrigger = other.transform.parent.GetComponent<PlayerMovement>() as BasePlayer;
+                }
+            }
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.transform.parent)
+        {
+            if (other.transform.parent.GetComponent<BasePlayer>())
+            {
+                canRevive = false;
+                if (playerInTrigger)
+                    playerInTrigger = other.transform.parent.GetComponent<PlayerMovement>() as BasePlayer;
+            }
+        }
     }
 }
