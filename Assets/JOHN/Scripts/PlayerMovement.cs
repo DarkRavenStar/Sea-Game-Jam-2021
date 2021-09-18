@@ -6,16 +6,9 @@ using UnityEngine;
 public class PlayerMovement : BasePlayer
 {
     Rigidbody rb;
-
-    [SerializeField]
-    private player Player;
-    enum player
+    protected override void OnEnable()
     {
-        player1,
-        player2
-    }
-    void OnEnable()
-    {
+        base.OnEnable();
         rb = this.GetComponent<Rigidbody>();
     }
 
@@ -23,8 +16,6 @@ public class PlayerMovement : BasePlayer
     public override void Update()
     {
         base.Update();
-
-     
     }
 
     private void FixedUpdate()
@@ -32,6 +23,7 @@ public class PlayerMovement : BasePlayer
         if (Player == player.player1)
         {
             rb.velocity = new Vector3(Input.GetAxis("HorizontalWASD") * movementSpeed * Time.fixedDeltaTime, 0, Input.GetAxis("VerticalWASD") * movementSpeed * Time.fixedDeltaTime);
+            //PlayerAnimation();
             if (Input.GetKey(KeyCode.W))//front
             {
                 RotateTowards(new Vector3(0, 0, 0), Player, Time.fixedDeltaTime);
@@ -96,9 +88,29 @@ public class PlayerMovement : BasePlayer
             transform.rotation = Quaternion.RotateTowards(transform.rotation, toRot, 1000f * delta);
         }
     }
-    public override void Death()
+    public override void DeathEvent(GameObject player)
     {
-        base.Death();
+        base.DeathEvent(player);
     }
 
+    private void PlayerAnimation()
+    {
+        bool isRight = false;
+        float currentRot = isRight?-20: 20;
+        float currentLerp;
+        currentLerp = Mathf.Lerp(transform.eulerAngles.z, currentRot, 0.01f);
+        //transform.eulerAngles = transform.rotation,Mathf.Lerp(transform.eulerAngles, Quaternion.Euler(0, 20, 0), 0.2f);
+        transform.localRotation = Quaternion.Euler(new Vector3(0, 0, currentLerp));
+        if(!isRight)
+        {
+            if(transform.eulerAngles.z == 20)
+            {
+                isRight = true;
+            }
+        }
+        else
+        {
+            isRight = false;
+        }
+    }
 }

@@ -15,60 +15,77 @@ public class BasePlayer : MonoBehaviour
     [SerializeField]
     private Transform JailPosition;
 
-    private System.Action<string> OnDeath = delegate { };
+    private bool isDead = false;
 
-    private void OnEnable()
+    [SerializeField]
+    protected player Player;
+    protected enum player
     {
-        OnDeath += Testing;
+        player1,
+        player2
+    }
+
+    private System.Action<GameObject> OnDeath = delegate { };
+
+    protected virtual void OnEnable()
+    {
+        OnDeath += OnDeathPlayer;
     }
     public virtual void Update()
     {
-        //if(playerHealth < 1)
-        //{
-        //    Death();
-        //}
-
-        if(Input.GetKeyDown(KeyCode.A))
+        if (this.playerHealth < 1)
         {
-            if(this.tag == "Player2")
+            if(!isDead)
             {
-                Death();
+                isDead = true;
+                DeathEvent(this.gameObject);
             }
+        }
+
+        if(Input.GetKeyDown(KeyCode.G))
+        {
+            if(Player == player.player2)
+                Damage();
         }
     }
     public virtual void Revive()
     {
-
-    }
-
-    public virtual void Death()
-    {
-        //StartCoroutine(DeathRoutine());
-
-        //Notify other player
-        List<BasePlayer> undeads = new List<BasePlayer>();
-        BasePlayer[] temp = FindObjectsOfType<BasePlayer>();
-        string tempDeathTag = "";
-         
-        for (int i =0; i < temp.Length; i ++)
-        {
-            if (temp[i] == this)
-                tempDeathTag = temp[i].tag;
-
-            if(temp[i] != this)
-            {
-                undeads.Add(temp[i]);
-            }
-        }
-        foreach(var undead in undeads)
-        {
-            undead.OnDeath(tempDeathTag);
-        }
+        playerHealth = 1;
+        isDead = false;
     }
 
     private void teleport(Transform pos)
     {
         transform.position = pos.position;
+    }
+
+    private void Damage()
+    {
+        this.playerHealth -= 1;
+    }
+
+    public virtual void DeathEvent(GameObject player)
+    {
+        List<BasePlayer> undeads = new List<BasePlayer>();
+        BasePlayer[] temp = FindObjectsOfType<BasePlayer>();
+
+        for (int i = 0; i < temp.Length; i++)
+        {
+
+            if (temp[i].isDead == false)
+            {
+                undeads.Add(temp[i]);
+
+            }
+            else
+            {
+                continue;
+            }
+        }
+        foreach (var undead in undeads)
+        {
+            undead.OnDeath(this.gameObject);
+        }
     }
 
     private IEnumerator DeathRoutine()
@@ -80,9 +97,11 @@ public class BasePlayer : MonoBehaviour
         teleport(JailPosition.transform);
     }
 
-    private void Testing(string tag)
+    public void OnDeathPlayer(GameObject deadPlayer)
     {
-        Debug.Log(tag + "TAG");
+        //Listener for deadplayer
+        Debug.Log(deadPlayer.name + "is dead");
+
 
     }
 }
