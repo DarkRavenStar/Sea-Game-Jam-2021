@@ -5,9 +5,17 @@ using UnityEngine.SceneManagement;
 using DG.DemiLib;
 using DG.Tweening;
 
+public enum PlayerAbility
+{
+    NONE,
+    DISPEL,
+    INFUSE
+}
 
 public class BasePlayer : MonoBehaviour
 {
+    public PlayerAbility playerAbility = PlayerAbility.NONE;
+
     public float playerHealth = 1;
 
     public float movementSpeed = 10;
