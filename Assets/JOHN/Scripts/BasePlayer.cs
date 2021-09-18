@@ -30,7 +30,7 @@ public class BasePlayer : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.A))
         {
-            if(this.tag == "Player1")
+            if(this.tag == "Player2")
             {
                 Death();
             }

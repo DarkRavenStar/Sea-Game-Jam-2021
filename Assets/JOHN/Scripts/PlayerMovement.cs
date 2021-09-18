@@ -5,10 +5,18 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerMovement : BasePlayer
 {
-    // Start is called before the first frame update
-    void Start()
+    Rigidbody rb;
+
+    [SerializeField]
+    private player Player;
+    enum player
     {
-        
+        player1,
+        player2
+    }
+    void OnEnable()
+    {
+        rb = this.GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
@@ -16,50 +24,78 @@ public class PlayerMovement : BasePlayer
     {
         base.Update();
 
-        if(this.tag == "Player1")
+     
+    }
+
+    private void FixedUpdate()
+    {
+        if (Player == player.player1)
         {
+            rb.velocity = new Vector3(Input.GetAxis("HorizontalWASD") * movementSpeed * Time.fixedDeltaTime, 0, Input.GetAxis("VerticalWASD") * movementSpeed * Time.fixedDeltaTime);
             if (Input.GetKey(KeyCode.W))//front
             {
-                this.GetComponent<Rigidbody>().velocity = Vector3.forward * movementSpeed * Time.deltaTime;
+                RotateTowards(new Vector3(0, 0, 0), Player, Time.fixedDeltaTime);
             }
             else if (Input.GetKey(KeyCode.A))//Left
             {
-                this.GetComponent<Rigidbody>().velocity = Vector3.right * -1 * movementSpeed * Time.deltaTime;
+                RotateTowards(new Vector3(0, 270, 0), Player, Time.fixedDeltaTime);
             }
             else if (Input.GetKey(KeyCode.S))//Down
             {
-                this.GetComponent<Rigidbody>().velocity = Vector3.forward * -1 * movementSpeed * Time.deltaTime;
+                RotateTowards(new Vector3(0, 180, 0), Player, Time.fixedDeltaTime);
             }
             else if (Input.GetKey(KeyCode.D))//Right
             {
-                this.GetComponent<Rigidbody>().velocity = Vector3.right * movementSpeed * Time.deltaTime;
+                RotateTowards(new Vector3(0, 0, 0), Player, Time.fixedDeltaTime);
             }
             else
             {
-                this.GetComponent<Rigidbody>().velocity = Vector3.zero;
+                rb.velocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+                rb.rotation = transform.rotation;
             }
         }
-        if(this.tag == "Player2")
+        if (Player == player.player2)
         {
+            rb.velocity = new Vector3(Input.GetAxis("HorizontalArrow") * movementSpeed * Time.fixedDeltaTime, 0, Input.GetAxis("VerticalArrow") * movementSpeed * Time.fixedDeltaTime);
             if (Input.GetKey(KeyCode.UpArrow))//front
             {
-
+                RotateTowards(new Vector3(0, 0, 0), Player, Time.fixedDeltaTime);
             }
-            if (Input.GetKey(KeyCode.LeftArrow))//Left
+            else if (Input.GetKey(KeyCode.LeftArrow))//Left
             {
-
+                RotateTowards(new Vector3(0, 270, 0), Player, Time.fixedDeltaTime);
             }
-            if (Input.GetKey(KeyCode.DownArrow))//Down
+            else if (Input.GetKey(KeyCode.DownArrow))//Down
             {
-
+                RotateTowards(new Vector3(0, 180, 0), Player, Time.fixedDeltaTime);
             }
-            if (Input.GetKey(KeyCode.RightArrow))//Right
+            else if (Input.GetKey(KeyCode.RightArrow))//Right
             {
-
+                RotateTowards(new Vector3(0, 0, 0), Player, Time.fixedDeltaTime);
+            }
+            else
+            {
+                rb.velocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+                rb.rotation = transform.rotation;
             }
         }
     }
+    private void RotateTowards(Vector3 dir, player player, float delta)
+    {
+        float horizontalInput = player == player.player1? Input.GetAxis("HorizontalWASD") : Input.GetAxis("HorizontalArrow");
+        float verticalInput = player == player.player1 ? Input.GetAxis("VerticalWASD") : Input.GetAxis("VerticalArrow");
 
+        Vector3 temp = new Vector3(horizontalInput, 0, verticalInput);
+        temp.Normalize();
+
+        if(temp != Vector3.zero)
+        {
+            Quaternion toRot = Quaternion.LookRotation(temp, Vector3.up);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, toRot, 1000f * delta);
+        }
+    }
     public override void Death()
     {
         base.Death();

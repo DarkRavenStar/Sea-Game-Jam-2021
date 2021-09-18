@@ -18,6 +18,8 @@ public class SceneLoad : BaseUI
 
     private void Awake()
     {
+        Application.targetFrameRate = 60;
+        
         DOTween.Init();
         DontDestroyOnLoad(gameObject);
         loadSceneMode = LoadSceneMode.Single;
