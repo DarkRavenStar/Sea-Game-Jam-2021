@@ -17,6 +17,8 @@ public class SceneLoad : BaseUI
     private AsyncOperation operation;
     private LoadSceneMode loadSceneMode;
 
+    private bool canLoad = true;
+
     private void Awake()
     {
         if (!instance)
@@ -45,9 +47,14 @@ public class SceneLoad : BaseUI
 
     public void LoadScene(string sceneName)
     {
-        PlayAnimation(mainCanvas, 1, 1f, (() => {
-            BeginLoadScene(sceneName);
-        }));
+        if (canLoad)
+        {
+            canLoad = false;
+            PlayAnimation(mainCanvas, 1, 1f, (() =>
+            {
+                BeginLoadScene(sceneName);
+            }));
+        }
     }
 
     private void BeginLoadScene(string sceneName)
@@ -69,6 +76,10 @@ public class SceneLoad : BaseUI
         loadingScreen.UpdateProgress(operation.progress);
         operation = null;
         mainCanvas.DOFade(0, 0.3f);
+
+
+        yield return new WaitForSeconds(1f);
+        canLoad = true;
     }
 
 }
