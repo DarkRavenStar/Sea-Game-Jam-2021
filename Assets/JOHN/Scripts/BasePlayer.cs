@@ -89,7 +89,7 @@ public class BasePlayer : MonoBehaviour
                     Revive(playerInTrigger);
             }
         }
-        if(Input.GetKeyDown(KeyCode.F))
+        if(Input.GetKeyDown(KeyCode.RightControl))
         {
             if (Player == player.player2)
             {

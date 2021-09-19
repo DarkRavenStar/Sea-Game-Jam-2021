@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class StartScene : MonoBehaviour
 {
+    public CanvasGroup tutorial;
+    public BaseUI baseUI;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,5 +21,13 @@ public class StartScene : MonoBehaviour
     public void LoadScene(string sceneName)
     {
         SceneLoad.instance.LoadScene(sceneName);
+    }
+
+    public void ToggleTutorial()
+    {
+        if(tutorial.alpha > 0)//close this
+            baseUI._PlayAnimation(tutorial, 0, 0.4f, null, false);
+        else if (tutorial.alpha < 1)
+            baseUI._PlayAnimation(tutorial, 1, 0.4f, null, true);
     }
 }

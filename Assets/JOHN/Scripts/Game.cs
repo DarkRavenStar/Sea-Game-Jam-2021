@@ -95,5 +95,4 @@ public class Game : MonoBehaviour
     {
         mHasCrown = true;
     }
-
 }
