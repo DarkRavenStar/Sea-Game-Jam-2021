@@ -152,11 +152,26 @@ public class GuardAI : MonoBehaviour
 
     void CheckEnemyToList(Transform target)
     {
+        float dstToTarget = Vector3.Distance(transform.position, target.position);
         Vector3 dirToTarget = (target.position - transform.position).normalized;
+
+        //Debug.Log("TeenaTest.GuardAI.CheckEnemyToList.dstToTarget: " + dstToTarget + " - navAgent.radius: " + navAgent.radius);
+        /*
+        if (dstToTarget > navAgent.radius && dstToTarget < navAgent.radius * 2)
+        {
+            int hits = Physics.RaycastNonAlloc(transform.position, dirToTarget, enemyHit, dstToTarget);
+
+            //if (Physics.Raycast(transform.position, dirToTarget, dstToTarget))
+            if (hits > 0 && (enemyHit[0].collider.gameObject.layer == targetLayer || enemyHit[0].collider.GetComponent<BasePlayer>() != null))
+            {
+                visibleTargets.Add(target);
+            }
+        }
+        else
+        */
+
         if (Vector3.Angle(transform.forward, dirToTarget) < viewAngle / 2)
         {
-            float dstToTarget = Vector3.Distance(transform.position, target.position);
-            
             int hits = Physics.RaycastNonAlloc(transform.position, dirToTarget, enemyHit, dstToTarget);
 
             //if (Physics.Raycast(transform.position, dirToTarget, dstToTarget))
@@ -205,12 +220,12 @@ public class GuardAI : MonoBehaviour
             {
                 NavMeshPath nmp = new NavMeshPath();
                 navAgent.CalculatePath(vt.position, nmp);
-                Debug.Log("TeenaTest.GuardAI.DetectionFOV.gameObject: " + vt.name + " - status: " + nmp.status + " - pathPending: " + navAgent.pathPending + " - navAgent.path: " + navAgent.path);
+                //Debug.Log("TeenaTest.GuardAI.DetectionFOV.gameObject: " + vt.name + " - status: " + nmp.status + " - pathPending: " + navAgent.pathPending + " - navAgent.path: " + navAgent.path);
                 navAgent.ResetPath();
                 navAgent.SetPath(nmp);
                 SetGuardAIState(GuardAI.AIState.Chase);
                 currentTarget = vt;
-
+                break;
                 /*
                 if (nmp.status == NavMeshPathStatus.PathComplete)
                 {
@@ -286,11 +301,13 @@ public class GuardAI : MonoBehaviour
             navAgent.ResetPath();
             patrolPointIndex = -1;
             returnToPatrolPath = true;
+            //Debug.Log("TeenaTest.GuardAI.PatrolBehaviour.V1");
         }
 
         if (navAgent.hasPath && navAgent.remainingDistance != 0)
         {
             patrolIdleTimer = patrolIdleTimerMin;
+            //Debug.Log("TeenaTest.GuardAI.PatrolBehaviour.V2");
             return;
         }
 
@@ -300,6 +317,7 @@ public class GuardAI : MonoBehaviour
 
             if (patrolIdleTimer > 0.0f)
             {
+                //Debug.Log("TeenaTest.GuardAI.PatrolBehaviour.V3");
                 return;
             }
         }
@@ -311,8 +329,8 @@ public class GuardAI : MonoBehaviour
             else if (patrolPointIndex < 0) patrolPointIndex = patrolPoint.Count - 1;
 
             NavMeshPathStatus status = CalculatePatrolPath(patrolPoint[patrolPointIndex].position);
-            
-            if(status != NavMeshPathStatus.PathComplete)
+            //Debug.Log("TeenaTest.GuardAI.PatrolBehaviour.V4.status: " + status);
+            if (status != NavMeshPathStatus.PathComplete)
             {
                 for (int i = 0; i < patrolPoint.Count; i++)
                 {
@@ -320,6 +338,7 @@ public class GuardAI : MonoBehaviour
 
                     if (statusTemp == NavMeshPathStatus.PathComplete)
                     {
+                        //Debug.Log("TeenaTest.GuardAI.PatrolBehaviour.V5");
                         patrolPointIndex = i;
                         break;
                     }
@@ -384,6 +403,21 @@ public class GuardAI : MonoBehaviour
         {
             suspicionMeter += suspicionMeterIncrease * Time.deltaTime;
             if (suspicionMeter > suspicionMeterTimeLimit) suspicionMeter = suspicionMeterTimeLimit;
+        }
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        BasePlayer ply = other.gameObject.GetComponent<BasePlayer>();
+        //Debug.Log("TeenaTest.GuardAI.KillCollidedPlayer.V1");
+        if (ply != null || other.gameObject.layer == targetLayer)
+        {
+            //Debug.Log("TeenaTest.GuardAI.KillCollidedPlayer.V2");
+            if (ply != null)
+            {
+                //Debug.Log("TeenaTest.GuardAI.KillCollidedPlayer.V3");
+                ply.Damage();
+            }
         }
     }
 
