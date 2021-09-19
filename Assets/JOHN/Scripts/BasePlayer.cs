@@ -22,6 +22,8 @@ public class BasePlayer : MonoBehaviour
 
     [SerializeField]
     private Transform JailPosition;
+    [SerializeField]
+    private Transform JailPosition2;
 
     protected bool isDead = false;
     public bool IsDead { get { return isDead; } private set {; } }
@@ -32,6 +34,7 @@ public class BasePlayer : MonoBehaviour
 
     [SerializeField]
     protected player Player;
+
     protected enum player
     {
         player1,
@@ -141,7 +144,15 @@ public class BasePlayer : MonoBehaviour
         ply.GetComponent<CapsuleCollider>().enabled = false;
         ply.GetComponent<Rigidbody>().isKinematic = true;
         yield return new WaitForSeconds(3f);
-        teleport(JailPosition.transform, ply);
+        if(ply.GetComponent<BasePlayer>().Player == player.player1)
+        {
+            teleport(JailPosition.transform, ply);
+        }
+        else
+        {
+            teleport(JailPosition2.transform, ply);
+        }
+
         ply.GetComponent<CapsuleCollider>().enabled = true;
         ply.GetComponent<Rigidbody>().isKinematic = false;
     }
