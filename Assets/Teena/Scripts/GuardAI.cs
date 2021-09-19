@@ -182,6 +182,8 @@ public class GuardAI : MonoBehaviour
         }
     }
 
+    bool isBellAsTarget = false;
+
     void FindVisibleTargets()
     {
         visibleTargets.Clear();
@@ -206,13 +208,13 @@ public class GuardAI : MonoBehaviour
                     if (currentTarget.gameObject.layer == targetLayer || (enemyHit[0].collider && enemyHit[0].collider.GetComponent<BasePlayer>() != null))
                     {
                         CheckEnemyToList(currentTarget);
+                        isBellAsTarget = false;
                     }
-                    /*
                     else //if bell - no need line of sight
                     {
                         visibleTargets.Add(currentTarget);
+                        isBellAsTarget = true;
                     }
-                    */
                 }
             }
         }
@@ -220,7 +222,7 @@ public class GuardAI : MonoBehaviour
         if (visibleTargets.Count > 0)
         {
             visibleTargets = visibleTargets.OrderBy(x => Vector3.Distance(this.transform.position, x.transform.position)).ToList();
-
+            
             foreach (var vt in visibleTargets)
             {
                 NavMeshPath nmp = new NavMeshPath();
@@ -230,6 +232,17 @@ public class GuardAI : MonoBehaviour
                 navAgent.SetPath(nmp);
                 SetGuardAIState(GuardAI.AIState.Chase);
                 currentTarget = vt;
+                //Debug.Log("TeenaTest.GuardAI.DetectionFOV: " + isBellAsTarget);
+                if (isBellAsTarget)
+                {
+                    if (navAgent.remainingDistance == 0)
+                    {
+                        currentTarget = null;
+                        navAgent.ResetPath();
+                        isBellAsTarget = false;
+                    }
+                }
+
                 break;
                 /*
                 if (nmp.status == NavMeshPathStatus.PathComplete)
