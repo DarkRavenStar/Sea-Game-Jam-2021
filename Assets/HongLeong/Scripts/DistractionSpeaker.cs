@@ -24,13 +24,25 @@ public class DistractionSpeaker : BaseInteractableObject
 
     [Header("Speaker Act Settings")]
     public List<DistractionSpeakerArea> areaList;
+
+    [Header("Switch")]
     public Animation ownAnim;
+
+    [Header("Sound")]
+    public SpeakerAnimation speakerAnim;
+
     private List<GameObject> mSoldierList;
+    private bool isAnimPlaying = false;
 
     protected override void Start()
     {
         base.Start();
         mSoldierList = new List<GameObject>();
+
+        if(speakerAnim)
+        {
+            speakerAnim.SetAnimationEndCb(AnimationEndCallback);
+        }
 
         for (int i = 0; i < areaList.Count; i++)
         {
@@ -45,25 +57,12 @@ public class DistractionSpeaker : BaseInteractableObject
         if (speakerType == SpeakerType.SWITCH)
         {
             //get player
-            if (playerDetect == PlayerAbility.INFUSE)
+            BasePlayer player = other.GetComponent<BasePlayer>();
+            if (player != null)
             {
-                BasePlayer player = other.GetComponent<BasePlayer>();
-                if (player != null && player.playerAbility == PlayerAbility.INFUSE)
-                {
-                    //set player action click callback
-                    player.OnInteract += ActionCall;
-                }
+                //set player action click callback
+                player.OnInteract += ActionCall;
             }
-            else if (playerDetect == PlayerAbility.DISPEL)
-            {
-                BasePlayer player = other.GetComponent<BasePlayer>();
-                if (player != null && player.playerAbility == PlayerAbility.DISPEL)
-                {
-                    //set player action click callback
-                    player.OnInteract += ActionCall;
-                }
-            }
-
         }
     }
 
@@ -73,23 +72,11 @@ public class DistractionSpeaker : BaseInteractableObject
         if (speakerType == SpeakerType.SWITCH)
         {
             //get player
-            if (playerDetect == PlayerAbility.INFUSE)
+            BasePlayer player = other.GetComponent<BasePlayer>();
+            if (player != null)
             {
-                BasePlayer player = other.GetComponent<BasePlayer>();
-                if (player != null && player.playerAbility == PlayerAbility.INFUSE)
-                {
-                    //remove player action click callback
-                    player.OnInteract -= ActionCall;
-                }
-            }
-            else if (playerDetect == PlayerAbility.DISPEL)
-            {
-                BasePlayer player = other.GetComponent<BasePlayer>();
-                if (player != null && player.playerAbility == PlayerAbility.DISPEL)
-                {
-                    //remove player action click callback
-                    player.OnInteract -= ActionCall;
-                }
+                //remove player action click callback
+                player.OnInteract -= ActionCall;
             }
         }
     }
@@ -122,23 +109,31 @@ public class DistractionSpeaker : BaseInteractableObject
     {
         if (speakerType == SpeakerType.SWITCH)
         {
+            if (isAnimPlaying) return;
+
             speaker?.ActionCall();
         }
         else if (speakerType == SpeakerType.SPEAKER)
         {
             Debug.LogWarning("[DistractionSpeaker] SpeakerType.SPEAKER");
+            isAnimPlaying = true;
             ownAnim.Play("bell-swing");
 
             //announce to all soldier in list
             foreach (GameObject go in mSoldierList)
             {
                 GuardAI gai = go.GetComponent<GuardAI>();
-                
-                if(gai != null)
+
+                if (gai != null)
                 {
                     gai.SetCurrentTarget(this.transform);
                 }
             }
         }
+    }
+
+    private void AnimationEndCallback()
+    {
+        isAnimPlaying = false;
     }
 }
