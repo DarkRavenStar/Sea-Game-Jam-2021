@@ -200,14 +200,17 @@ public class GuardAI : MonoBehaviour
             {
                 //if cannot find any enemy, then check last known target if available in line of sight
 
-                //if player - do LOS
-                if (currentTarget.gameObject.layer == targetLayer || enemyHit[0].collider.GetComponent<BasePlayer>() != null)
+                if(currentTarget.gameObject != null)
                 {
-                    CheckEnemyToList(currentTarget);
-                }
-                else //if bell - no need line of sight
-                {
-                    visibleTargets.Add(currentTarget);
+                    //if player - do LOS
+                    if (currentTarget.gameObject.layer == targetLayer || enemyHit[0].collider.GetComponent<BasePlayer>() != null)
+                    {
+                        CheckEnemyToList(currentTarget);
+                    }
+                    else //if bell - no need line of sight
+                    {
+                        visibleTargets.Add(currentTarget);
+                    }
                 }
             }
         }
