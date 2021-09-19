@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1431898406517788900}
   - component: {fileID: 1431898406517788905}
   - component: {fileID: 1431898406517788904}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -77,7 +77,7 @@ GameObject:
   - component: {fileID: 1431898406537587521}
   - component: {fileID: 1431898406537587646}
   - component: {fileID: 1431898406537587525}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Player1
   m_TagString: Player1
   m_Icon: {fileID: 0}
@@ -129,6 +129,7 @@ MonoBehaviour:
   playerHealth: 1
   movementSpeed: 300
   JailPosition: {fileID: 0}
+  JailPosition2: {fileID: 0}
   Player: 0
   mesh: {fileID: 1431898406517788901}
 --- !u!54 &1431898406537587525
@@ -210,9 +211,37 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7517755557425239658, guid: 344bf0d89d1317845ac5f7f3588233c9, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: -6435399192587130656, guid: 344bf0d89d1317845ac5f7f3588233c9, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: -6406224287864669291, guid: 344bf0d89d1317845ac5f7f3588233c9, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: -3878209124836542126, guid: 344bf0d89d1317845ac5f7f3588233c9, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 450894083759767970, guid: 344bf0d89d1317845ac5f7f3588233c9, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 635547659545568360, guid: 344bf0d89d1317845ac5f7f3588233c9, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 344bf0d89d1317845ac5f7f3588233c9, type: 3}
       propertyPath: m_Name
       value: Player01_BurgerKing
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 344bf0d89d1317845ac5f7f3588233c9, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 344bf0d89d1317845ac5f7f3588233c9, type: 3}
