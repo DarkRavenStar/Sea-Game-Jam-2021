@@ -12,11 +12,13 @@ public class CameraMovement : MonoBehaviour
 
     Camera cam;
 
-    float offset = 2.2f;
+    float offset = 4.4f;
 
     public Vector3 midPoint = Vector3.zero;
 
     private bool hasDead = false;
+
+    private float camheight = 20;
     // Start is called before the first frame update
     void Start()
     {
@@ -39,13 +41,16 @@ public class CameraMovement : MonoBehaviour
         CheckDeadPlayer();
         if (hasDead == false)
         {
-            midPoint = new Vector3(0, 10, ((players[0].position.z + players[1].position.z) / 2) - offset);
-            cam.transform.position = midPoint;
+            midPoint = new Vector3(0, camheight, ((players[0].position.z + players[1].position.z) / 2) - offset);
+            var temp = Mathf.Clamp(midPoint.z, -6.73f, 75.24f);
+            cam.transform.position = new Vector3(midPoint.x, midPoint.y, temp);
             screenBound = Camera.main.ScreenToWorldPoint(midPoint);
         }
         else
         {
-            cam.transform.position = Vector3.Lerp(new Vector3(0, 10, cam.transform.position.z), new Vector3(0,10, UndeadPlayer().position.z), 0.3f);
+            var lerp = Vector3.Lerp(new Vector3(0, camheight, cam.transform.position.z), new Vector3(0, camheight, UndeadPlayer().position.z), 0.3f);
+            var temp = Mathf.Clamp(lerp.z, -6.73f, 75.24f);
+            cam.transform.position = new Vector3(lerp.x, lerp.y, lerp.z);
         }
     }
 
@@ -91,7 +96,7 @@ public class CameraMovement : MonoBehaviour
         }
 
         //Is in FOV
-        if ((pointOnScreen.y < 80) || (pointOnScreen.y > Screen.height - 80))
+        if ((pointOnScreen.y < 40) || (pointOnScreen.y > Screen.height - 40))
         {
             temp = pointOnScreen.y;
             playerPos = temp;

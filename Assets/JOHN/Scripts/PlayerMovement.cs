@@ -44,7 +44,7 @@ public class PlayerMovement : BasePlayer
                 }
                 else
                 {
-                    if(tempP1 < 100)//at the bottom of the screen
+                    if(tempP1 < 40)//at the bottom of the screen
                     {
                         var tempVertAxis = Mathf.Abs(Input.GetAxis("VerticalWASD"));
                         rb.velocity = new Vector3(Input.GetAxis("HorizontalWASD") * movementSpeed * Time.fixedDeltaTime, 0, tempVertAxis * movementSpeed * Time.fixedDeltaTime);
@@ -95,7 +95,7 @@ public class PlayerMovement : BasePlayer
                 }
                 else
                 {
-                    if (tempP2 < 80)//at the bottom of the screen
+                    if (tempP2 < 40)//at the bottom of the screen
                     {
                         var tempVertAxis = Mathf.Abs(Input.GetAxis("VerticalArrow"));
                         rb.velocity = new Vector3(Input.GetAxis("HorizontalArrow") * movementSpeed * Time.fixedDeltaTime, 0, tempVertAxis * movementSpeed * Time.fixedDeltaTime);
