@@ -86,7 +86,7 @@ public class Game : MonoBehaviour
         if (mHasCrown)
         {
             //go to win UI
-            SceneLoad.instance?.LoadScene("End");
+            SceneLoad.instance?.LoadScene("Outro");
             return true;
         }
 

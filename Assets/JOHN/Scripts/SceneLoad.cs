@@ -19,6 +19,7 @@ public class SceneLoad : BaseUI
 
     private bool canLoad = true;
 
+    public bool hasPlayIntro = false;
     private void Awake()
     {
         if (!instance)

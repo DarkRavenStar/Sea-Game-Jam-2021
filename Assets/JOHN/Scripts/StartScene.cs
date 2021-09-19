@@ -20,7 +20,14 @@ public class StartScene : MonoBehaviour
 
     public void LoadScene(string sceneName)
     {
-        SceneLoad.instance.LoadScene(sceneName);
+        if (SceneLoad.instance.hasPlayIntro == false)
+        {
+            SceneLoad.instance.LoadScene(sceneName);
+        }
+        else
+        {
+            SceneLoad.instance.LoadScene("Main");
+        }
     }
 
     public void ToggleTutorial()
