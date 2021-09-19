@@ -307,19 +307,23 @@ public class GuardAI : MonoBehaviour
         if (navAgent.hasPath && navAgent.remainingDistance != 0)
         {
             patrolIdleTimer = patrolIdleTimerMin;
-            //Debug.Log("TeenaTest.GuardAI.PatrolBehaviour.V2");
+            //Debug.Log("TeenaTest.GuardAI.PatrolBehaviour.V2.patrolIdleTimer: " + patrolIdleTimer);
             return;
         }
-
-        if (navAgent.hasPath && navAgent.remainingDistance == 0)
+        else
         {
             patrolIdleTimer -= Time.deltaTime;
 
             if (patrolIdleTimer > 0.0f)
             {
-                //Debug.Log("TeenaTest.GuardAI.PatrolBehaviour.V3");
+                //Debug.Log("TeenaTest.GuardAI.PatrolBehaviour.V3.patrolIdleTimer: " + patrolIdleTimer);
                 return;
             }
+        }
+
+        if (navAgent.hasPath && navAgent.remainingDistance == 0)
+        {
+            
         }
 
         if (patrolType == PatrolType.PatrolPoint)
