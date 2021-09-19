@@ -51,7 +51,16 @@ public class GuardAI : MonoBehaviour
 
     [Tooltip("PatrolRadius is for random patrol use only")]
     public float patrolRadius;
+
+    public float patrolIdleTimerMin = 2.0f;
+    float patrolIdleTimer = 0.0f;
     
+    public float suspicionMeter = 0.0f;
+    [Tooltip("TimeLimit in seconds")]
+    public float suspicionMeterTimeLimit = 5.0f;
+    public float suspicionMeterIncrease = 1.0f;
+
+    int targetLayer = 7; //hard coded 7 as player layer
 
     protected void Start()
     {
@@ -84,25 +93,35 @@ public class GuardAI : MonoBehaviour
     Quaternion turnLeftQuat;
     Quaternion turnRightQuat;
 
+    Vector3 turnLeftVector3;
+    Vector3 turnRightVector3;
+
     void HeadTurnAnimation()
     {
         if(!isRotatingHead)
         {
             Quaternion curQuat = transform.localRotation;
-            turnLeftQuat = Quaternion.Euler(curQuat.eulerAngles + new Vector3(0, headTurnAngle));
-            turnRightQuat = Quaternion.Euler(curQuat.eulerAngles + new Vector3(0, -headTurnAngle));
+
+            turnLeftVector3 = curQuat.eulerAngles + new Vector3(0, headTurnAngle);
+            turnRightVector3 = curQuat.eulerAngles + new Vector3(0, -headTurnAngle);
+
+            turnLeftQuat = Quaternion.Euler(turnLeftVector3);
+            turnRightQuat = Quaternion.Euler(turnRightVector3);
+
             isRotatingHead = true;
             turnLeft = false;
         }
 
-        transform.localRotation = Quaternion.Slerp(transform.rotation, turnLeft ? turnLeftQuat : turnRightQuat, Time.deltaTime * headTurnSpeed);
+        transform.localRotation = Quaternion.RotateTowards(transform.rotation, turnLeft ? turnLeftQuat : turnRightQuat, Time.deltaTime * headTurnSpeed);
+
+        //transform.localRotation = Quaternion.Slerp(transform.rotation, turnLeft ? turnLeftQuat : turnRightQuat, Time.deltaTime * headTurnSpeed);
 
         if(transform.localRotation == (turnLeft ? turnLeftQuat : turnRightQuat))
         {
             turnLeft = !turnLeft;
         }
         
-        Debug.Log("TeenaTest.GuardAI.HeadTurn.turnLeft: " + turnLeft);
+        //Debug.Log("TeenaTest.GuardAI.HeadTurn.turnLeft: " + turnLeft);
     }
 
     void LookAtTarget()
@@ -116,7 +135,7 @@ public class GuardAI : MonoBehaviour
             //Smooth rotate towards target
             transform.rotation = Quaternion.SlerpUnclamped(transform.rotation, lookAtQuat, Time.deltaTime * headTurnSpeed);
             
-            Debug.Log("TeenaTest.GuardAI.LookAtTarget: ");
+            //Debug.Log("TeenaTest.GuardAI.LookAtTarget: ");
         }
     }
 
@@ -129,14 +148,19 @@ public class GuardAI : MonoBehaviour
         }
     }
 
+    RaycastHit[] enemyHit = new RaycastHit[1];
+
     void CheckEnemyToList(Transform target)
     {
         Vector3 dirToTarget = (target.position - transform.position).normalized;
         if (Vector3.Angle(transform.forward, dirToTarget) < viewAngle / 2)
         {
             float dstToTarget = Vector3.Distance(transform.position, target.position);
+            
+            int hits = Physics.RaycastNonAlloc(transform.position, dirToTarget, enemyHit, dstToTarget);
 
-            if (Physics.Raycast(transform.position, dirToTarget, dstToTarget, targetMask))
+            //if (Physics.Raycast(transform.position, dirToTarget, dstToTarget))
+            if (hits > 0 && (enemyHit[0].collider.gameObject.layer == targetLayer || enemyHit[0].collider.GetComponent<BasePlayer>() != null))
             {
                 visibleTargets.Add(target);
             }
@@ -162,7 +186,7 @@ public class GuardAI : MonoBehaviour
                 //if cannot find any enemy, then check last known target if available in line of sight
 
                 //if player - do LOS
-                if (currentTarget.gameObject.layer == targetMask.value)
+                if (currentTarget.gameObject.layer == targetLayer || enemyHit[0].collider.GetComponent<BasePlayer>() != null)
                 {
                     CheckEnemyToList(currentTarget);
                 }
@@ -181,7 +205,7 @@ public class GuardAI : MonoBehaviour
             {
                 NavMeshPath nmp = new NavMeshPath();
                 navAgent.CalculatePath(vt.position, nmp);
-                Debug.Log("TeenaTest.GuardAI.DetectionFOV.gameObject: " + vt.name + " - status: " + nmp.status + " - pathPending: " + navAgent.pathPending);
+                Debug.Log("TeenaTest.GuardAI.DetectionFOV.gameObject: " + vt.name + " - status: " + nmp.status + " - pathPending: " + navAgent.pathPending + " - navAgent.path: " + navAgent.path);
                 navAgent.ResetPath();
                 navAgent.SetPath(nmp);
                 SetGuardAIState(GuardAI.AIState.Chase);
@@ -208,26 +232,103 @@ public class GuardAI : MonoBehaviour
         }
     }
 
+    void CheckForChaseEndedState()
+    {
+        if(suspicionMeter > 0)
+        {
+            SetGuardAIState(GuardAI.AIState.Suspicous);
+        }
+        else
+        {
+            if(patrolType == PatrolType.None)
+            {
+                SetGuardAIState(GuardAI.AIState.Idle);
+            }
+            else
+            {
+                SetGuardAIState(GuardAI.AIState.Patrol);
+            }
+        }
+
+        if(currentAIState != AIState.Patrol)
+        {
+            returnToPatrolPath = false;
+        }
+    }
+
     public void SetCurrentTarget(Transform target)
     {
         currentTarget = target;
     }
 
-    void CheckPatrol()
+    bool returnToPatrolPath = false;
+    int patrolPointIndex = 0;
+
+    NavMeshPathStatus CalculatePatrolPath(Vector3 dest)
     {
-        switch (patrolType)
+        NavMeshPath navPath = new NavMeshPath();
+        navAgent.CalculatePath(dest, navPath);
+
+        if (navPath.status == NavMeshPathStatus.PathComplete)
         {
-            case PatrolType.None:
-                break;
-            case PatrolType.PatrolPoint:
-                DoHeadTurn(true);
-                break;
-            case PatrolType.RandomPatrol:
-                LookAtTarget();
-                break;
-            default:
-                // code block
-                break;
+            navAgent.ResetPath();
+            navAgent.SetPath(navPath);
+        }
+
+        return navPath.status;
+    }
+
+    void PatrolBehaviour()
+    {
+        DoHeadTurn(true);
+        if (returnToPatrolPath == false)
+        {
+            navAgent.ResetPath();
+            patrolPointIndex = -1;
+            returnToPatrolPath = true;
+        }
+
+        if (navAgent.hasPath && navAgent.remainingDistance != 0)
+        {
+            patrolIdleTimer = patrolIdleTimerMin;
+            return;
+        }
+
+        if (navAgent.hasPath && navAgent.remainingDistance == 0)
+        {
+            patrolIdleTimer -= Time.deltaTime;
+
+            if (patrolIdleTimer > 0.0f)
+            {
+                return;
+            }
+        }
+
+        if (patrolType == PatrolType.PatrolPoint)
+        {
+            patrolPointIndex++;
+            if (patrolPointIndex > patrolPoint.Count - 1) patrolPointIndex = 0;
+            else if (patrolPointIndex < 0) patrolPointIndex = patrolPoint.Count - 1;
+
+            NavMeshPathStatus status = CalculatePatrolPath(patrolPoint[patrolPointIndex].position);
+            
+            if(status != NavMeshPathStatus.PathComplete)
+            {
+                for (int i = 0; i < patrolPoint.Count; i++)
+                {
+                    NavMeshPathStatus statusTemp = CalculatePatrolPath(patrolPoint[i].position);
+
+                    if (statusTemp == NavMeshPathStatus.PathComplete)
+                    {
+                        patrolPointIndex = i;
+                        break;
+                    }
+                }
+            }
+        }
+        else if (patrolType == PatrolType.RandomPatrol)
+        {
+            
         }
     }
 
@@ -262,23 +363,51 @@ public class GuardAI : MonoBehaviour
         currentAIState = InCurrentAIState;
     }
 
+    void SuspicionBehaviour()
+    {
+        DoHeadTurn(true);
+        if (suspicionMeter >= 0.0f)
+        {
+            suspicionMeter -= suspicionMeterIncrease * Time.deltaTime;
+            if (suspicionMeter < 0.0f)
+            {
+                suspicionMeter = 0.0f;
+            }
+        }
+    }
+
+    void ChaseBehaviour()
+    {
+        DoHeadTurn(false);
+        LookAtTarget();
+        if (suspicionMeter <= suspicionMeterTimeLimit)
+        {
+            suspicionMeter += suspicionMeterIncrease * Time.deltaTime;
+            if (suspicionMeter > suspicionMeterTimeLimit) suspicionMeter = suspicionMeterTimeLimit;
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
+        if (currentTarget == null)
+        {
+            CheckForChaseEndedState();
+        }
+
         switch (currentAIState)
         {
             case AIState.Idle:
                 DoHeadTurn(true);
                 break;
             case AIState.Patrol:
-                DoHeadTurn(true);
+                PatrolBehaviour();
                 break;
             case AIState.Chase:
-                DoHeadTurn(false);
-                LookAtTarget();
+                ChaseBehaviour();
                 break;
             case AIState.Suspicous:
-                // code block
+                SuspicionBehaviour();
                 break;
             case AIState.Distracted:
                 // code block
