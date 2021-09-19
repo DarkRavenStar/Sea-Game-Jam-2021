@@ -138,11 +138,8 @@ public class BasePlayer : MonoBehaviour
     {
         ply.GetComponent<CapsuleCollider>().enabled = false;
         ply.GetComponent<Rigidbody>().isKinematic = true;
-        yield return new WaitForSeconds(2.5f);
-        ply.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(3f);
         teleport(JailPosition.transform, ply);
-        ply.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = true;
         ply.GetComponent<CapsuleCollider>().enabled = true;
         ply.GetComponent<Rigidbody>().isKinematic = false;
     }

@@ -19,13 +19,15 @@ public class CameraMovement : MonoBehaviour
     void Start()
     {
         cam = Camera.main;
-        StartCoroutine(CheckBounds());
+        //StartCoroutine(CheckBounds());
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-
+        midPoint = new Vector3(0, 10, ((players[0].position.z + players[1].position.z) / 2) - offset);
+        cam.transform.position = midPoint;
+        screenBound = Camera.main.ScreenToWorldPoint(midPoint);
     }
 
     IEnumerator CheckBounds()

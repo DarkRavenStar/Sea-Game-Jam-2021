@@ -170,4 +170,17 @@ public class PlayerMovement : BasePlayer
         base.OnRevivedPlayer(ply);
         ply.GetComponent<PlayerMovement>().anim.SetBool("isDead", false);
     }
+
+    public void ChangePlayerSpeed(bool isSlow = false)
+    {
+        if(isSlow)
+        {
+            movementSpeed = 150;
+        }
+        else
+        {
+            movementSpeed = 300f;
+        }
+    }
+
 }
