@@ -203,14 +203,16 @@ public class GuardAI : MonoBehaviour
                 if(currentTarget.gameObject != null)
                 {
                     //if player - do LOS
-                    if (currentTarget.gameObject.layer == targetLayer || enemyHit[0].collider.GetComponent<BasePlayer>() != null)
+                    if (currentTarget.gameObject.layer == targetLayer || (enemyHit[0].collider && enemyHit[0].collider.GetComponent<BasePlayer>() != null))
                     {
                         CheckEnemyToList(currentTarget);
                     }
+                    /*
                     else //if bell - no need line of sight
                     {
                         visibleTargets.Add(currentTarget);
                     }
+                    */
                 }
             }
         }
