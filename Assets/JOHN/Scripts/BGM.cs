@@ -4,10 +4,19 @@ using UnityEngine;
 
 public class BGM : MonoBehaviour
 {
+    public static BGM instance = null;
     // Start is called before the first frame update
     private void Awake()
     {
-        DontDestroyOnLoad(this.gameObject);
+        if (!instance)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
 
     }
 
