@@ -26,7 +26,7 @@ public class Videointro : MonoBehaviour
         {
             test.GetComponent<AudioSource>().volume = 0;
         }
-        yield return new WaitForSecondsRealtime(55f);
+        yield return new WaitForSecondsRealtime(50f);
         SceneLoad.instance.hasPlayIntro = true;
         SceneLoad.instance.LoadScene("Main");
         if (test != null)
