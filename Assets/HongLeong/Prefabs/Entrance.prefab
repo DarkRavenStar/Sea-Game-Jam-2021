@@ -454,6 +454,9 @@ MonoBehaviour:
   radiusSize: 0
   gameManager: {fileID: 0}
   ownAnim: {fileID: 2043908621816368778}
+  doorRendererList:
+  - {fileID: 497617413845464234}
+  - {fileID: 2954426982541024945}
 --- !u!1 &8601304181886099442
 GameObject:
   m_ObjectHideFlags: 0
@@ -513,7 +516,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 201af881096634144962438511568be6, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -594,7 +597,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 201af881096634144962438511568be6, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

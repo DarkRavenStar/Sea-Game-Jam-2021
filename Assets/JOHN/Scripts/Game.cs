@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Game : MonoBehaviour
 {
+    public Entrance entrance;
+
     [SerializeField]
     private BasePlayer[] Players;
 
@@ -94,5 +96,6 @@ public class Game : MonoBehaviour
     public void TakeCrown()
     {
         mHasCrown = true;
+        entrance.ChangeDoorColor();
     }
 }

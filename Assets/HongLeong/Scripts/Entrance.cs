@@ -7,6 +7,7 @@ public class Entrance : BaseInteractableObject
     [Header("Entrance Settings")]
     public Game gameManager;
     public Animation ownAnim;
+    public Renderer[] doorRendererList;
 
     private List<GameObject> mPlayerList;
     private bool mIsDoorOpened;
@@ -59,6 +60,14 @@ public class Entrance : BaseInteractableObject
                 mIsDoorOpened = true;
                 ownAnim.Play("entrance-open");
             }
+        }
+    }
+
+    public void ChangeDoorColor()
+    {
+        for (int i = 0; i < doorRendererList.Length; i++)
+        {
+            doorRendererList[i].material.color = Color.green;
         }
     }
 }
