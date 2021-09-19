@@ -15,6 +15,8 @@ public class CameraMovement : MonoBehaviour
     float offset = 2.2f;
 
     public Vector3 midPoint = Vector3.zero;
+
+    private bool hasDead = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -22,21 +24,58 @@ public class CameraMovement : MonoBehaviour
         //StartCoroutine(CheckBounds());
     }
 
+    private void OnEnable()
+    {
+        hasDead = false;
+    }
+    private void OnDisable()
+    {
+        hasDead = false;
+    }
+
     // Update is called once per frame
     void FixedUpdate()
     {
-        midPoint = new Vector3(0, 10, ((players[0].position.z + players[1].position.z) / 2) - offset);
-        cam.transform.position = midPoint;
-        screenBound = Camera.main.ScreenToWorldPoint(midPoint);
+        CheckDeadPlayer();
+        if (hasDead == false)
+        {
+            midPoint = new Vector3(0, 10, ((players[0].position.z + players[1].position.z) / 2) - offset);
+            cam.transform.position = midPoint;
+            screenBound = Camera.main.ScreenToWorldPoint(midPoint);
+        }
+        else
+        {
+            cam.transform.position = Vector3.Lerp(new Vector3(0, 10, cam.transform.position.z), new Vector3(0,10, UndeadPlayer().position.z), 0.3f);
+        }
     }
 
-    IEnumerator CheckBounds()
+    
+    void CheckDeadPlayer()
     {
-        midPoint = new Vector3(0, 10, ((players[0].position.z + players[1].position.z) / 2) - offset);
-        cam.transform.position = midPoint;
-        screenBound = Camera.main.ScreenToWorldPoint(midPoint);
-        yield return new WaitForSecondsRealtime(0.008f);
-        StartCoroutine(CheckBounds());
+        foreach (var ply in players)
+        {
+            if(ply.GetComponent<BasePlayer>().IsDead)
+            {
+                hasDead = true;
+                return;
+            }
+        }
+        hasDead = false;    
+    }
+
+    Transform UndeadPlayer()
+    {
+        Transform temp = null;
+
+        foreach (var ply in players)
+        {
+            if(ply.GetComponent<BasePlayer>().IsDead == false)
+            {
+                temp = ply;
+            }
+        }
+
+        return temp;
     }
 
     public bool CanMove(Vector3 origin, GameObject toCheck, out float playerPos)

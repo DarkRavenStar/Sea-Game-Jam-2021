@@ -24,6 +24,7 @@ public class BasePlayer : MonoBehaviour
     private Transform JailPosition;
 
     protected bool isDead = false;
+    public bool IsDead { get { return isDead; } private set {; } }
 
     private bool canRevive = false;
 
@@ -65,12 +66,12 @@ public class BasePlayer : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.G))
+        if (Input.GetKeyDown(KeyCode.K))
         {
             if (Player == player.player2)
                 Damage();
         }
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.L))
         {
             if (Player == player.player1)
                 Damage();
@@ -82,7 +83,7 @@ public class BasePlayer : MonoBehaviour
             {
                 this.OnInteract?.Invoke();
             }
-            if(canRevive)
+            if(canRevive && Player == player.player1)
             {
                 if(playerInTrigger)
                     Revive(playerInTrigger);
@@ -94,7 +95,7 @@ public class BasePlayer : MonoBehaviour
             {
                 this.OnInteract?.Invoke();
             }
-            if(canRevive)
+            if(canRevive && Player == player.player2)
             {
                 if(playerInTrigger)
                     Revive(playerInTrigger);
