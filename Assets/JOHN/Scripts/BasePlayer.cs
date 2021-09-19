@@ -137,6 +137,7 @@ public class BasePlayer : MonoBehaviour
 
     private IEnumerator DeathRoutine(GameObject ply)
     {
+        ply.GetComponent<Rigidbody>().constraints |= RigidbodyConstraints.FreezePosition;
         ply.GetComponent<CapsuleCollider>().enabled = false;
         ply.GetComponent<Rigidbody>().isKinematic = true;
         yield return new WaitForSeconds(3f);
@@ -147,12 +148,14 @@ public class BasePlayer : MonoBehaviour
 
     protected virtual void OnDeathPlayer(GameObject deadPlayer)
     {
+
         //Listener for deadplayer
         StartCoroutine(DeathRoutine(deadPlayer));
         Debug.Log(deadPlayer.name + "is dead");
     }
     protected virtual void OnRevivedPlayer(GameObject ply)
     {
+        ply.GetComponent<Rigidbody>().constraints &= ~(RigidbodyConstraints.FreezePosition);
         //Listener for revived ply
         Debug.Log(ply.name + "is revived");
     }
