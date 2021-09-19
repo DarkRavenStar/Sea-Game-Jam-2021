@@ -24,6 +24,7 @@ public class DistractionSpeaker : BaseInteractableObject
 
     [Header("Speaker Act Settings")]
     public List<DistractionSpeakerArea> areaList;
+    public Animation ownAnim;
     private List<GameObject> mSoldierList;
 
     protected override void Start()
@@ -126,6 +127,8 @@ public class DistractionSpeaker : BaseInteractableObject
         else if (speakerType == SpeakerType.SPEAKER)
         {
             Debug.LogWarning("[DistractionSpeaker] SpeakerType.SPEAKER");
+            ownAnim.Play("bell-swing");
+
             //announce to all soldier in list
             foreach (GameObject go in mSoldierList)
             {
