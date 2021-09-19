@@ -48,9 +48,12 @@ public class CameraMovement : MonoBehaviour
         }
         else
         {
-            var lerp = Vector3.Lerp(new Vector3(0, camheight, cam.transform.position.z), new Vector3(0, camheight, UndeadPlayer().position.z), 0.3f);
-            var temp = Mathf.Clamp(lerp.z, -6.73f, 75.24f);
-            cam.transform.position = new Vector3(lerp.x, lerp.y, lerp.z);
+            if (UndeadPlayer() != null)
+            {
+                var lerp = Vector3.Lerp(new Vector3(0, camheight, cam.transform.position.z), new Vector3(0, camheight, UndeadPlayer().position.z), 0.3f);
+                var temp = Mathf.Clamp(lerp.z, -6.73f, 75.24f);
+                cam.transform.position = new Vector3(lerp.x, lerp.y, lerp.z);
+            }
         }
     }
 
