@@ -221,7 +221,6 @@ public class GuardAI : MonoBehaviour
                 NavMeshPath nmp = new NavMeshPath();
                 navAgent.CalculatePath(vt.position, nmp);
                 //Debug.Log("TeenaTest.GuardAI.DetectionFOV.gameObject: " + vt.name + " - status: " + nmp.status + " - pathPending: " + navAgent.pathPending + " - navAgent.path: " + navAgent.path);
-                
                 navAgent.ResetPath();
                 navAgent.SetPath(nmp);
                 SetGuardAIState(GuardAI.AIState.Chase);
@@ -404,6 +403,21 @@ public class GuardAI : MonoBehaviour
         {
             suspicionMeter += suspicionMeterIncrease * Time.deltaTime;
             if (suspicionMeter > suspicionMeterTimeLimit) suspicionMeter = suspicionMeterTimeLimit;
+        }
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        BasePlayer ply = other.gameObject.GetComponent<BasePlayer>();
+        //Debug.Log("TeenaTest.GuardAI.KillCollidedPlayer.V1");
+        if (ply != null || other.gameObject.layer == targetLayer)
+        {
+            //Debug.Log("TeenaTest.GuardAI.KillCollidedPlayer.V2");
+            if (ply != null)
+            {
+                //Debug.Log("TeenaTest.GuardAI.KillCollidedPlayer.V3");
+                ply.Damage();
+            }
         }
     }
 
